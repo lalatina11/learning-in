@@ -1,0 +1,10 @@
+services:
+    mysql:
+        image: mysql:8.0
+        environment:
+            - MYSQL_DATABASE=learning_in
+            - MYSQL_ROOT_PASSWORD=password
+            - MYSQL_PASSWORD=password
+            - MYSQL_USER=kelompok_2_wp2
+        ports:
+            - 3306:3306
