@@ -28,18 +28,12 @@ class AuthController extends Controller
 
     public function showAuthPage()
     {
-        // if ($redirect = $this->cannotLogin()) {
-        //     return $redirect;
-        // }
         return Inertia::render('auth',);
     }
 
     public function login(Request $request)
     {
 
-        // if ($redirect = $this->cannotLogin()) {
-        //     return $redirect;
-        // }
         $validated = $request->validate([
             'master_number' => 'string|min:8|max:16',
             'password' => 'string|min:8'
@@ -60,11 +54,16 @@ class AuthController extends Controller
     }
     public function register(Request $request)
     {
-        // $this->cannotLogin();
         $validated = $request->validate([
             'identifier' => 'string|min:3',
             'password' => 'string|min:8',
             'role' => 'required|in:TEACHER,STUDENT,ADMIN'
         ]);
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('login');
     }
 }
