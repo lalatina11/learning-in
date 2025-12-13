@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -8,4 +9,21 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::get('/login', [AuthController::class, 'showAuthPage'])->name('login');
+Route::middleware(['guest.middleware'])->group(function () {
+    Route::get('/login', [AuthController::class, 'showAuthPage'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+});
+Route::middleware(['auth.middleware'])->group(function () {
+    Route::prefix('/dashboard')->group(function () {
+
+        Route::middleware(['admin.middleware'])->group(function () {
+            Route::get('/admin', [DashboardController::class, 'showAdminDashboard'])->name('dashboard.admin');
+        });
+        Route::middleware(['teacher.middleware'])->group(function () {
+            Route::get('/teacher', [DashboardController::class, 'showTeacherDashboard'])->name('dashboard.teacher');
+        });
+        Route::middleware(['student.middleware'])->group(function () {
+            Route::get('/', [DashboardController::class, 'showStudentDashboard'])->name('dashboard.student');
+        });
+    });
+});
