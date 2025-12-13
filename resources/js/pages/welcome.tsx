@@ -1,6 +1,7 @@
 import { RippleButton, RippleButtonRipples } from '@/components/animate-ui/components/buttons/ripple';
 import HomePageContainer from '@/components/containers/home-page-container';
-import GroupMembers from '@/components/group-members';
+import Faq from '@/components/FAQ';
+import GroupMembers, { SLIDES } from '@/components/group-members';
 import { ModeToggle } from '@/components/ThemeToggler';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Head, Link, router } from '@inertiajs/react';
@@ -46,11 +47,11 @@ const Welcome = () => {
                             <CardDescription>Anggota Kelompok 2 Web Programming II</CardDescription>
                         </CardHeader>
                         <CardContent className="gap- flex-col2 flex flex-col gap-2 text-sm">
-                            <span>1. Candra Rahmadan - 19240731</span>
-                            <span>2. Ires Agil Karisma - 19240730</span>
-                            <span>3. Yoga Rozan Pradana - 1924</span>
-                            <span>4. Unggul Rahmat Pradana - 1924</span>
-                            <span>5. Aga Panggih Yanuar Saputra - 1924</span>
+                            {SLIDES.map((member, idx) => (
+                                <span key={idx}>
+                                    {idx + 1}. {member.name} - {member.nim}
+                                </span>
+                            ))}
                         </CardContent>
                     </Card>
                 </section>
@@ -60,6 +61,9 @@ const Welcome = () => {
                             <GroupMembers />
                         </CardContent>
                     </Card>
+                </section>
+                <section className="mx-auto mt-10 flex flex-col gap-3">
+                    <Faq />
                 </section>
             </main>
             <footer className="mt-10 flex items-center justify-center bg-primary-foreground p-4">
