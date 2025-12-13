@@ -17,6 +17,8 @@ export interface User {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
+    role: 'TEACHER' | 'STUDENT' | 'ADMIN';
+    master_number: string;
     [key: string]: unknown; // This allows for additional properties...
 }
 
