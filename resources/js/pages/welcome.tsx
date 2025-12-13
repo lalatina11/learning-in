@@ -1,16 +1,15 @@
-import { RippleButton, RippleButtonRipples } from '@/components/animate-ui/components/buttons/ripple';
 import HomePageContainer from '@/components/containers/home-page-container';
 import Faq from '@/components/FAQ';
 import GroupMembers, { SLIDES } from '@/components/group-members';
 import { ModeToggle } from '@/components/ThemeToggler';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 
 const Welcome = () => {
     return (
-        <>
+        <HomePageContainer>
             <Head title="Welcome"></Head>
-            <HomePageContainer />
             <header className="flex items-center justify-between border-b border-zinc-500 p-4">
                 <Link href={'/'} className="flex items-center gap-1">
                     <img src="/EL.svg" className="hidden h-auto w-10 rounded-md object-cover dark:block" />
@@ -18,10 +17,9 @@ const Welcome = () => {
                     <span className="text-xl font-semibold">Learning IN</span>
                 </Link>
                 <nav className="flex items-center gap-2 font-semibold">
-                    <RippleButton onClick={() => router.push({ url: '#auth' })}>
-                        Login
-                        <RippleButtonRipples />
-                    </RippleButton>
+                    <Button asChild>
+                        <Link href={'/auth'}>Login</Link>
+                    </Button>
                     <div className="ml-3">
                         <ModeToggle />
                     </div>
@@ -66,13 +64,7 @@ const Welcome = () => {
                     <Faq />
                 </section>
             </main>
-            <footer className="mt-10 flex items-center justify-center bg-primary-foreground p-4">
-                <div className="flex flex-col items-center">
-                    <span className="text-lg font-semibold">Learning IN</span>
-                    <span className="text-sm">&copy; 2025 Learning IN. All rights reserved.</span>
-                </div>
-            </footer>
-        </>
+        </HomePageContainer>
     );
 };
 
