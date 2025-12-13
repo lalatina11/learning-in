@@ -16,7 +16,6 @@ Route::middleware(['guest.middleware'])->group(function () {
 
 Route::middleware(['auth.middleware'])->group(function () {
     Route::prefix('/dashboard')->group(function () {
-
         Route::middleware(['admin.middleware'])->prefix('/admin')->group(function () {
             Route::get('/', [DashboardController::class, 'showAdminDashboard'])->name('dashboard.admin');
         });
