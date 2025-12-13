@@ -1,6 +1,8 @@
 'use client';
 
 import { Button } from '@/components/animate-ui/components/buttons/button';
+import { Badge } from '@/components/ui/badge';
+import { GroupMemberSlide } from '@/types';
 import { EmblaCarouselType, EmblaOptionsType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -8,7 +10,7 @@ import { motion, type Transition } from 'motion/react';
 import * as React from 'react';
 
 type PropType = {
-    slides: number[];
+    slides: Array<GroupMemberSlide>;
     options?: EmblaOptionsType;
 };
 
@@ -92,21 +94,26 @@ function GroupMembersMotionCarousel(props: PropType) {
         <div className="w-full space-y-4 [--slide-height:9rem] [--slide-size:55%] [--slide-spacing:1.5rem] sm:[--slide-height:13rem] md:[--slide-height:18rem]">
             <div className="overflow-hidden" ref={emblaRef}>
                 <div className="flex touch-pan-y touch-pinch-zoom">
-                    {slides.map((index) => {
+                    {slides.map((member, index) => {
                         const isActive = index === selectedIndex;
 
                         return (
-                            <motion.div key={index} className="mr-[var(--slide-spacing)] aspect-square flex-none basis-[var(--slide-size)]">
+                            <motion.div
+                                key={index}
+                                className="mr-[var(--slide-spacing)] flex aspect-square flex-none basis-[var(--slide-size)] flex-col gap-3"
+                            >
                                 <motion.img
-                                    src="/EL.jpeg"
-                                    className="flex aspect-square size-full items-center justify-center rounded-xl border-4 text-3xl font-semibold select-none md:text-5xl"
+                                    src={member.image || '/EL.jpeg'}
+                                    className="flex aspect-square size-full flex-1 items-center justify-center rounded-xl border-4 object-cover text-3xl font-semibold select-none md:text-5xl"
                                     initial={false}
                                     animate={{
                                         scale: isActive ? 1 : 0.9,
                                     }}
                                     transition={transition}
                                 />
-                                {/* {index + 1} */}
+                                <Badge className="mx-auto">
+                                    {member.name} - {member.nim}
+                                </Badge>
                                 {/* </motion.div> */}
                             </motion.div>
                         );
@@ -121,7 +128,7 @@ function GroupMembersMotionCarousel(props: PropType) {
 
                 <div className="flex flex-wrap items-center justify-end gap-2">
                     {scrollSnaps.map((_, index) => (
-                        <DotButton key={index} label={`Slide ${index + 1}`} selected={index === selectedIndex} onClick={() => onDotClick(index)} />
+                        <DotButton key={index} label={`Member ${index + 1}`} selected={index === selectedIndex} onClick={() => onDotClick(index)} />
                     ))}
                 </div>
 
