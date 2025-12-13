@@ -18,7 +18,7 @@ const Welcome = () => {
                 </Link>
                 <nav className="flex items-center gap-2 font-semibold">
                     <Button asChild>
-                        <Link href={'/auth'}>Login</Link>
+                        <Link href={'/login'}>Login</Link>
                     </Button>
                     <div className="ml-3">
                         <ModeToggle />
