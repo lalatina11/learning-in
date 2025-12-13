@@ -6,6 +6,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class AuthController extends Controller
@@ -48,16 +49,14 @@ class AuthController extends Controller
             return redirect()->back()->withErrors("Pengguna tidak terdaftar", 'server');
         }
         $token = Auth::attempt($validated);
+
         if (!$token) {
             return redirect()->back()->withErrors("Password tidak valid", 'server');
         }
-        if ($user->role === "ADMIN") {
-            return redirect()->route('dashboard.admin');
-        }
-        if ($user->role === "TEACHER") {
-            return redirect()->route('dashboard.teacher');
-        }
-        return redirect()->route('dashboard.student');
+
+        $request->session()->regenerate();
+
+        return redirect()->route('dashboard.' . Str::lower($user->name));
     }
     public function register(Request $request)
     {
