@@ -16,7 +16,8 @@ class UserSeeder extends Seeder
         User::factory()->count(3)->sequence(
             [
                 'role' => 'ADMIN',
-                'email' => 'admin@admin.com'
+                'email' => 'admin@admin.com',
+                'master_number' => 'administrator'
             ],
             [
                 'role' => 'TEACHER',
