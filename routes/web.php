@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\StudentDashboardController;
+use App\Http\Controllers\TeacherDashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -17,13 +20,13 @@ Route::middleware(['guest.middleware'])->group(function () {
 Route::middleware(['auth.middleware'])->group(function () {
     Route::prefix('/dashboard')->group(function () {
         Route::middleware(['admin.middleware'])->prefix('/admin')->group(function () {
-            Route::get('/', [DashboardController::class, 'showAdminDashboard'])->name('dashboard.admin');
+            Route::get('/', [AdminDashboardController::class, 'showAdminDashboard'])->name('dashboard.admin');
         });
         Route::middleware(['teacher.middleware'])->prefix('/teacher')->group(function () {
-            Route::get('/', [DashboardController::class, 'showTeacherDashboard'])->name('dashboard.teacher');
+            Route::get('/', [TeacherDashboardController::class, 'showTeacherDashboard'])->name('dashboard.teacher');
         });
         Route::middleware(['student.middleware'])->group(function () {
-            Route::get('/', [DashboardController::class, 'showStudentDashboard'])->name('dashboard.student');
+            Route::get('/', [StudentDashboardController::class, 'showStudentDashboard'])->name('dashboard.student');
         });
     });
     Route::delete('/logout', [AuthController::class, 'logout'])->name('logout');
