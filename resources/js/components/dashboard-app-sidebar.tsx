@@ -1,6 +1,7 @@
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
@@ -11,7 +12,9 @@ import {
 import { User as UserType } from '@/types';
 import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
-import { LayoutDashboard, School, User } from 'lucide-react';
+import { ChevronUp, LayoutDashboard, School, User, User2 } from 'lucide-react';
+import LogOutForm from './forms/logout-form';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 const getSidebarMenuByUserRole = (role: UserType['role']) => {
     if (role === 'ADMIN') {
@@ -22,12 +25,12 @@ const getSidebarMenuByUserRole = (role: UserType['role']) => {
                 icon: LayoutDashboard,
             },
             {
-                title: 'User Management',
+                title: 'Kelola Pengguna',
                 url: '/dashboard/admin/user',
                 icon: User,
             },
             {
-                title: 'Class Management',
+                title: 'Kelola Kelas',
                 url: '/dashboard/admin/class',
                 icon: School,
             },
@@ -44,10 +47,10 @@ const DashboardAppSidebar = () => {
     const items = getSidebarMenuByUserRole(user?.role as UserType['role']);
 
     return (
-        <Sidebar>
+        <Sidebar collapsible="icon">
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
+                    <SidebarGroupLabel>Dashboard Menu</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item) => (
@@ -64,6 +67,31 @@ const DashboardAppSidebar = () => {
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
+            <SidebarFooter>
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <SidebarMenuButton>
+                                    <User2 /> {user?.name}
+                                    <ChevronUp className="ml-auto" />
+                                </SidebarMenuButton>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent side="right" className="w-[--radix-popper-anchor-width]">
+                                <DropdownMenuItem>
+                                    <span>Profile</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <span>Billing</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild className="flex w-full">
+                                    <LogOutForm />
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarFooter>
         </Sidebar>
     );
 };
