@@ -4,7 +4,7 @@ import { registerSchema, RegisterSchemaType } from '@/lib/form-schema';
 import { switchUserRoleToCapitalize } from '@/lib/switch-cases';
 import { User } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { router, usePage } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import { Edit, Eye, EyeOff, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -23,7 +23,6 @@ interface Props {
 }
 
 const CreateOrUpdateUserForm = ({ user }: Props) => {
-    const { errors } = usePage().props;
     const [mode] = useState<'update' | 'create'>(user !== undefined ? 'update' : 'create');
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -47,47 +46,48 @@ const CreateOrUpdateUserForm = ({ user }: Props) => {
     };
 
     const onSubmit = async (body: RegisterSchemaType) => {
-        if (user !== undefined && !isCreateForm) {
-            router.patch(`/dashboard/admin/user/${user.id}`, body, {
-                onStart: () => setIsLoading(true),
-                onFinish: () => setIsLoading(false),
-                onError: (err) => {
-                    console.log(err);
-                },
+        // Early validation for create form
+        if (isCreateForm && body.password.trim().length < 8) {
+            form.setError('password', { message: 'Minimal 8 karakter' });
+            toast.error('Gagal Membuat Pengguna baru', {
+                description: 'Password tidak valid',
+                action: { label: 'OK', onClick: () => {} },
             });
-        } else {
-            if (body.password.trim().length < 8) {
-                form.setError('password', { message: 'Minimal 8 karakter' });
-                return toast.error(`Gagal Membuat Pengguna baru`, {
-                    description: 'Password tidak valid',
-                    action: {
-                        label: 'OK',
-                        onClick: () => {},
-                    },
-                });
-            }
-            router.post('/dashboard/admin/user', body, { onStart: () => setIsLoading(true), onFinish: () => setIsLoading(false) });
+            return;
         }
-        if (errors.server || errors.server[0]) {
-            form.setError('root', { message: errors.server[0] || 'Terjadi kesalahan' });
-            return toast.error(`Gagal ${isCreateForm ? 'Membuat' : 'Mengedit'} Pengguna ${isCreateForm ? 'Baru' : ''}`, {
-                description: errors.server[0] || 'Terjadi kegagalan',
-                action: {
-                    label: 'OK',
-                    onClick: () => {},
-                },
-            });
-        }
-        toast.success(`Berhasil ${isCreateForm ? 'Membuat' : 'Mengedit'} Pengguna ${isCreateForm ? 'Baru' : ''}`, {
-            action: {
-                label: 'OK',
-                onClick: () => {},
-            },
-        });
-        form.reset();
-        handleCloseSheet();
-    };
 
+        // Determine route and method
+        const isUpdate = user !== undefined && !isCreateForm;
+        const endpoint = isUpdate ? `/dashboard/admin/user/${user.id}` : '/dashboard/admin/user';
+        const method = isUpdate ? 'patch' : 'post';
+
+        // Common request options
+        const requestOptions = {
+            onStart: () => setIsLoading(true),
+            onFinish: () => setIsLoading(false),
+            onError: (err: any) => {
+                const errorMessage = err.server[0] || 'Terjadi kesalahan';
+                form.setError('root', { message: errorMessage });
+
+                toast.error(`Gagal ${isCreateForm ? 'Membuat' : 'Mengedit'} Pengguna${isCreateForm ? ' Baru' : ''}`, {
+                    description: errorMessage,
+                    action: { label: 'OK', onClick: () => {} },
+                });
+            },
+            onSuccess: () => {
+                toast.success(`Berhasil ${isCreateForm ? 'Membuat' : 'Mengedit'} Pengguna${isCreateForm ? ' Baru' : ''}`, {
+                    action: { label: 'OK', onClick: () => {} },
+                });
+                if (isCreateForm) {
+                    form.reset();
+                }
+                handleCloseSheet();
+            },
+        };
+
+        // Execute request
+        router[method](endpoint, body, requestOptions);
+    };
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
