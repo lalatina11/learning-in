@@ -30,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'teacher.middleware' => TeacherMiddleware::class,
             'student.middleware' => StudentMiddleware::class,
         ]);
+        $middleware->encryptCookies(['sidebar_state']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
