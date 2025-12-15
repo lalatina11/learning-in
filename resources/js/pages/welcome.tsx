@@ -4,9 +4,14 @@ import GroupMembers, { SLIDES } from '@/components/group-members';
 import { ModeToggle } from '@/components/ThemeToggler';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Head, Link } from '@inertiajs/react';
+import { PageProps } from '@/types/page-props';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { LayoutDashboard, LogIn } from 'lucide-react';
 
 const Welcome = () => {
+    const {
+        auth: { user },
+    } = usePage().props as PageProps;
     return (
         <HomePageContainer>
             <Head title="Welcome"></Head>
@@ -18,7 +23,16 @@ const Welcome = () => {
                 </Link>
                 <nav className="flex items-center gap-2 font-semibold">
                     <Button asChild>
-                        <Link href={'/login'}>Login</Link>
+                        {user ? (
+                            <Link href={`/dashboard/${user.role === 'ADMIN' ? 'admin' : user.role === 'TEACHER' ? 'teacher' : ''}`}>
+                                <LayoutDashboard /> Dashboard
+                            </Link>
+                        ) : (
+                            <Link href={'/login'}>
+                                <LogIn />
+                                Login
+                            </Link>
+                        )}
                     </Button>
                     <div className="ml-3">
                         <ModeToggle />
