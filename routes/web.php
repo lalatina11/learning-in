@@ -14,13 +14,17 @@ Route::get('/', function () {
 
 Route::middleware(['guest.middleware'])->group(function () {
     Route::get('/login', [AuthController::class, 'showAuthPage'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.handle');
 });
 
 Route::middleware(['auth.middleware'])->group(function () {
     Route::prefix('/dashboard')->group(function () {
         Route::middleware(['admin.middleware'])->prefix('/admin')->group(function () {
             Route::get('/', [AdminDashboardController::class, 'showAdminDashboard'])->name('dashboard.admin');
+            Route::get('/user', [AdminDashboardController::class, 'showManageUserDashboard'])->name('dashboard.admin.manage.user');
+            Route::post('/user', [AdminDashboardController::class, 'createUser'])->name('dashboard.admin.manage.create.user');
+            Route::patch('/user/{id}', [AdminDashboardController::class, 'updateUser'])->name('dashboard.admin.manage.update.user');
+            Route::delete('/user/{id}', [AdminDashboardController::class, 'deleteUser'])->name('dashboard.admin.manage.delete.user');
         });
         Route::middleware(['teacher.middleware'])->prefix('/teacher')->group(function () {
             Route::get('/', [TeacherDashboardController::class, 'showTeacherDashboard'])->name('dashboard.teacher');
