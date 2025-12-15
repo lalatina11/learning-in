@@ -9,6 +9,6 @@ class StudentDashboardController extends Controller
 {
     public function showStudentDashboard()
     {
-        return Inertia::render("dashboard/index",);
+        return Inertia::render("dashboard/student/index",);
     }
 }
