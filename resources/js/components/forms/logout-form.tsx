@@ -30,7 +30,7 @@ const LogOutForm = ({ isButtonTextHidden }: Props) => {
     };
 
     return (
-        <Button disabled={isLoading} onClick={handleLogout} variant={'destructive'}>
+        <Button disabled={isLoading} className="w-full" onClick={handleLogout} variant={'destructive'}>
             {isLoading ? (
                 <Spinner />
             ) : (
