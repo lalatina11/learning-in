@@ -50,7 +50,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('dashboard.' . Str::lower($user->name));
+        return redirect()->route('dashboard.' . Str::lower($user->role));
     }
     public function register(Request $request)
     {
