@@ -1,6 +1,6 @@
 import { loginSchema, LoginSchemaType } from '@/lib/form-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { router, usePage } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import { Eye, EyeClosed } from 'lucide-react';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -12,8 +12,6 @@ import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '
 import { Spinner } from '../ui/spinner';
 
 const LoginForm = () => {
-    const { errors } = usePage().props;
-
     const [isShowPassword, setIsShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const form = useForm({
@@ -25,32 +23,35 @@ const LoginForm = () => {
     });
 
     const handleSubmit = async (body: LoginSchemaType) => {
-        router.post('login', body, {
+        const actionOptions = {
             onStart: () => {
                 setIsLoading(true);
             },
             onFinish: () => {
                 setIsLoading(false);
             },
-        });
-        if (errors.server?.[0]) {
-            form.setError('root', { message: errors.server?.[0] || 'Terjadi Kesalahan' });
-            toast.error('Gagal login', {
-                description: errors.server?.[0] || 'Terjadi Kesalahan',
-                action: {
-                    label: 'OK',
-                    onClick: () => {},
-                },
-            });
-        } else {
-            toast.success('Berhasil Login', {
-                description: 'Anda sedang diarahkan menuju halaman dashboard!',
-                action: {
-                    label: 'OK',
-                    onClick: () => {},
-                },
-            });
-        }
+            onError: (errors: any) => {
+                const errorMessage = errors.server?.[0] || 'Terjadi Kesalahan';
+                form.setError('root', { message: errorMessage });
+                toast.error('Gagal login', {
+                    description: errorMessage,
+                    action: {
+                        label: 'OK',
+                        onClick: () => {},
+                    },
+                });
+            },
+            onSuccess: () => {
+                toast.success('Berhasil Login', {
+                    description: 'Anda sedang diarahkan menuju halaman dashboard!',
+                    action: {
+                        label: 'OK',
+                        onClick: () => {},
+                    },
+                });
+            },
+        };
+        router.post('login', body, actionOptions);
     };
 
     return (
