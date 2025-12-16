@@ -31,6 +31,8 @@ const LoginForm = () => {
                 setIsLoading(false);
             },
             onError: (errors: any) => {
+                console.log(errors);
+
                 const errorMessage = errors.server?.[0] || 'Terjadi Kesalahan';
                 form.setError('root', { message: errorMessage });
                 toast.error('Gagal login', {
