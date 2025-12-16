@@ -45,6 +45,32 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => 'string'
         ];
+    }
+
+    public function isAdmin()
+    {
+        return $this->role == 'ADMIN';
+    }
+
+    public function isTeacher()
+    {
+        return $this->role == 'TEACHER';
+    }
+
+    public function isStudent()
+    {
+        return $this->role == "STUDENT";
+    }
+
+    public function teachingStudyRooms()
+    {
+        return $this->hasMany(StudyRoom::class, 'teacher_id');
+    }
+
+    public function studyRooms()
+    {
+        return $this->belongsToMany(StudyRoom::class, 'student_in_the_study_room', 'student_id', 'study_room_id');
     }
 }
