@@ -30,8 +30,8 @@ const getSidebarMenuByUserRole = (role: UserType['role']) => {
                 icon: User,
             },
             {
-                title: 'Kelola Kelas',
-                url: '/dashboard/admin/class',
+                title: 'Kelola Sekolah',
+                url: '/dashboard/admin/school',
                 icon: School,
             },
         ];
