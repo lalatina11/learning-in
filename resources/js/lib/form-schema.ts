@@ -19,3 +19,9 @@ export const registerSchema = z.object({
 });
 
 export type RegisterSchemaType = z.infer<typeof registerSchema>;
+
+export const majorSchema = z.object({
+    name: z.string().min(3, 'Berikan nama jurusan minimal 3 karakter'),
+});
+
+export type MajorSchemaType = z.infer<typeof majorSchema>;
