@@ -1,7 +1,7 @@
 import { User } from '@/types';
 import { router } from '@inertiajs/react';
 import { Trash } from 'lucide-react';
-import CreateOrUpdateUserForm from '../forms/create-or-upadte-user-form';
+import CreateOrUpdateUserForm from '../forms/create-or-update-user-form';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
