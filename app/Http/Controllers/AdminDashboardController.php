@@ -29,12 +29,12 @@ class AdminDashboardController extends Controller
             "role" => "required|string|in:ADMIN,TEACHER,STUDENT",
         ]);
 
-        $existingMasterNumber = User::where("master_number",  $validated['master_number'])->first();
+        $existingMasterNumber = User::where("master_number", $validated['master_number'])->first();
 
         if ($existingMasterNumber) {
             return redirect()->back()->withErrors("NIM/NIK sudah digunakan, tolong ganti", "server");
         }
-        $existingEmail = User::where("email",  $validated['email'])->first();
+        $existingEmail = User::where("email", $validated['email'])->first();
 
         if ($existingEmail) {
             return redirect()->back()->withErrors("Email sudah digunakan, tolong ganti", "server");
@@ -63,13 +63,13 @@ class AdminDashboardController extends Controller
             return redirect()->back()->withErrors("Pengguna tidak valid", "server");
         }
 
-        $existingMasterNumber = User::where("master_number",  $validated['master_number'])->first();
+        $existingMasterNumber = User::where("master_number", $validated['master_number'])->first();
 
         if ($existingMasterNumber && ($existingMasterNumber->id != $id)) {
             return redirect()->back()->withErrors("NIM/NIK sudah digunakan, tolong ganti", "server");
         }
 
-        $existingEmail = User::where("email",   $validated['email'])->first();
+        $existingEmail = User::where("email", $validated['email'])->first();
 
         if ($existingEmail && ($existingEmail->id != $id)) {
             return redirect()->back()->withErrors("Email sudah digunakan, tolong ganti", "server");
@@ -94,5 +94,10 @@ class AdminDashboardController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
         return redirect()->back();
+    }
+
+    public function showSchoolManagementDashboard()
+    {
+        return Inertia::render('dashboard/admin/school');
     }
 }
