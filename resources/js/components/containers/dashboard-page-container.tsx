@@ -21,7 +21,7 @@ const DashboardPageContainer = ({ children }: Props) => {
                 <DashboardAppSidebar />
                 <div className="w-full">
                     <SideBarHeader />
-                    {children}
+                    <main className="flex h-full flex-col gap-10 p-6">{children}</main>
                 </div>
             </SidebarProvider>
         </ToasterProviderContainer>
