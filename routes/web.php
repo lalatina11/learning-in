@@ -21,10 +21,15 @@ Route::middleware(['auth.middleware'])->group(function () {
     Route::prefix('/dashboard')->group(function () {
         Route::middleware(['admin.middleware'])->prefix('/admin')->group(function () {
             Route::get('/', [AdminDashboardController::class, 'showAdminDashboard'])->name('dashboard.admin');
-            Route::get('/user', [AdminDashboardController::class, 'showManageUserDashboard'])->name('dashboard.admin.manage.user');
-            Route::post('/user', [AdminDashboardController::class, 'createUser'])->name('dashboard.admin.manage.create.user');
-            Route::patch('/user/{id}', [AdminDashboardController::class, 'updateUser'])->name('dashboard.admin.manage.update.user');
-            Route::delete('/user/{id}', [AdminDashboardController::class, 'deleteUser'])->name('dashboard.admin.manage.delete.user');
+            Route::prefix('/user')->group(function () {
+                Route::get('/', [AdminDashboardController::class, 'showManageUserDashboard'])->name('dashboard.admin.manage.user');
+                Route::post('', [AdminDashboardController::class, 'createUser'])->name('dashboard.admin.manage.create.user');
+                Route::patch('/{id}', [AdminDashboardController::class, 'updateUser'])->name('dashboard.admin.manage.update.user');
+                Route::delete('/{id}', [AdminDashboardController::class, 'deleteUser'])->name('dashboard.admin.manage.delete.user');
+            });
+            Route::prefix('/school')->group(function () {
+                Route::get('/', [AdminDashboardController::class, 'showSchoolManagementDashboard'])->name('dashboard.admin.manage.school.index');
+            });
         });
         Route::middleware(['teacher.middleware'])->prefix('/teacher')->group(function () {
             Route::get('/', [TeacherDashboardController::class, 'showTeacherDashboard'])->name('dashboard.teacher');
