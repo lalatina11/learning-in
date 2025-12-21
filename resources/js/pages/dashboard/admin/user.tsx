@@ -9,30 +9,25 @@ interface Props {
 }
 
 const AdminUserManagementDashboard = ({ users }: Props) => {
-    console.log(users);
+    const usersItem = [
+        { title: 'Data Guru', users: users.filter((user) => user.role !== 'TEACHER') },
+        { title: 'Data Siswa', users: users.filter((user) => user.role !== 'STUDENT') },
+    ];
 
     return (
         <DashboardPageContainer>
-            <main className="flex h-full flex-col gap-10 p-6">
-                <section>
-                    <CreateOrUpdateUserForm />
-                </section>
-                <section className="flex flex-col gap-3">
+            <section>
+                <CreateOrUpdateUserForm />
+            </section>
+            {usersItem.map((item) => (
+                <section key={item.title} className="flex flex-col gap-3">
                     <div className="flex items-center gap-2">
                         <User />
                         <h1>Data Siswa</h1>
                     </div>
-                    <UserTable users={users.filter((user) => user.role !== 'TEACHER')} />
+                    <UserTable users={item.users} />
                 </section>
-
-                <section className="flex flex-col gap-3">
-                    <div className="flex items-center gap-2">
-                        <User />
-                        <h1>Data Guru</h1>
-                    </div>
-                    <UserTable users={users.filter((user) => user.role !== 'STUDENT')} />
-                </section>
-            </main>
+            ))}
         </DashboardPageContainer>
     );
 };
