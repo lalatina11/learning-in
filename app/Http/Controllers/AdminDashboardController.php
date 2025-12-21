@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Major;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -9,6 +10,11 @@ use Inertia\Inertia;
 
 class AdminDashboardController extends Controller
 {
+    private function getMajorById($id)
+    {
+        return Major::findOrFail($id);
+    }
+
     public function showAdminDashboard()
     {
         return Inertia::render("dashboard/admin/index");
@@ -98,6 +104,58 @@ class AdminDashboardController extends Controller
 
     public function showSchoolManagementDashboard()
     {
-        return Inertia::render('dashboard/admin/school');
+        $majors = Major::all();
+        return Inertia::render('dashboard/admin/school', compact('majors'));
+    }
+
+    public function createMajor(Request $request)
+    {
+        $validated = $request->validate([
+            "name" => "string|min:3"
+        ]);
+
+        $existingMajor = Major::where("name", $validated["name"])->first();
+
+        if ($existingMajor) {
+            return redirect()->back()->withErrors("Jurusan dengan nama " . $validated['name'] . " sudah ada, tolong ganti", "server");
+        }
+
+        Major::create($validated);
+
+        return redirect()->back();
+    }
+    public function updateMajor($id, Request $request)
+    {
+        $validated = $request->validate([
+            "name" => "string|min:3"
+        ]);
+
+        $existingMajor = $this->getMajorById($id);
+
+        if (!$existingMajor) {
+            return redirect()->back()->withErrors("Jurusan ini tidak tersedia", "server");
+        }
+
+        $existingMajorName = Major::where("name", $validated["name"])->first();
+
+        if ($existingMajorName && ($existingMajorName['id'] != $existingMajor['id'])) {
+            return redirect()->back()->withErrors("Nama Jurusan bentrok dengan jurusan lain", "server");
+        }
+
+        $existingMajor->update($validated);
+
+        return redirect()->back();
+    }
+    public function deleteMajor($id)
+    {
+        $existingMajor = $this->getMajorById($id);
+
+        if (!$existingMajor) {
+            return redirect()->back()->withErrors("Jurusan ini tidak tersedia", "server");
+        }
+
+        $existingMajor->delete();
+
+        return redirect()->back();
     }
 }
