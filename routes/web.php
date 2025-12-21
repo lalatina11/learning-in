@@ -29,6 +29,11 @@ Route::middleware(['auth.middleware'])->group(function () {
             });
             Route::prefix('/school')->group(function () {
                 Route::get('/', [AdminDashboardController::class, 'showSchoolManagementDashboard'])->name('dashboard.admin.manage.school.index');
+                Route::prefix('/majors')->group(function () {
+                    Route::post('/', [AdminDashboardController::class, 'createMajor'])->name('dashboard.admin.manage.school.create.major');
+                    Route::patch('/{id}', [AdminDashboardController::class, 'updateMajor'])->name('dashboard.admin.manage.school.update.major');
+                    Route::delete('/{id}', [AdminDashboardController::class, 'deleteMajor'])->name('dashboard.admin.manage.school.delete.major');
+                });
             });
         });
         Route::middleware(['teacher.middleware'])->prefix('/teacher')->group(function () {
