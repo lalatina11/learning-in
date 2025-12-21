@@ -27,3 +27,10 @@ export interface GroupMemberSlide {
     nim: string;
     image: string;
 }
+
+interface Major {
+    id: number;
+    name: string;
+    created_at: Date;
+    updated_at: Date;
+}
