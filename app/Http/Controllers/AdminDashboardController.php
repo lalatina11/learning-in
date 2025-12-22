@@ -177,10 +177,17 @@ class AdminDashboardController extends Controller
         if (!in_array($validated['grade'], $allowedGrade, true)) {
             return redirect()->back()->withErrors('Tingkatan kelas tidak valid!', 'server');
         }
+
         $existingMajor = Major::findOrFail($validated['major_id']);
+
         if (!$existingMajor) {
             return redirect()->back()->withErrors('Jurusan tidak valid!', 'server');
+        }
 
+        $existingClassRoom = ClassRoom::where('grade', $validated['grade'])->where('major_id', $validated['major_id'])->first();
+
+        if ($existingClassRoom) {
+            return redirect()->back()->withErrors('Kelas ini bentrok dengan kelas lain!', 'server');
         }
 
         ClassRoom::create($validated);
