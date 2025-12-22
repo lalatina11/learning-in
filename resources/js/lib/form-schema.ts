@@ -1,7 +1,8 @@
-import type { User } from '@/types';
+import type { ClassRoom, User } from '@/types';
 import { z } from 'zod';
 
-const userRoleEnum = ['ADMIN', 'STUDENT', 'TEACHER'] as const as Array<User['role']>;
+export const userRoleEnum = ['ADMIN', 'STUDENT', 'TEACHER'] as const as Array<User['role']>;
+export const gradeEnum = ['X', 'XI', 'XII'] as const as Array<ClassRoom['grade']>;
 
 export const loginSchema = z.object({
     master_number: z.string().min(8, 'Minimal 8 karakter'),
@@ -25,3 +26,9 @@ export const majorSchema = z.object({
 });
 
 export type MajorSchemaType = z.infer<typeof majorSchema>;
+
+export const classRoomSchema = z.object({
+    major_id: z.coerce.number().min(1).default(1),
+    grade: z.enum(gradeEnum),
+});
+export type ClassRoomSchemaType = z.infer<typeof classRoomSchema>;
