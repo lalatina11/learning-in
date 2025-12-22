@@ -1,6 +1,6 @@
 import { Major } from '@/types';
 import { Edit, Trash } from 'lucide-react';
-import CreateOrUpdateOrDeleteMajorForm from '../forms/create-or-update-or-delete-major-form';
+import MajorForm from '../forms/major-form';
 import { Button } from '../ui/button';
 import { CardContent } from '../ui/card';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
@@ -32,18 +32,18 @@ const MajorTable = ({ majors }: Props) => {
                                 <TableCell>{major.name}</TableCell>
                                 <TableCell>
                                     <div className="flex items-center justify-center gap-2">
-                                        <CreateOrUpdateOrDeleteMajorForm type="update" major={major}>
+                                        <MajorForm type="update" major={major}>
                                             <Button>
                                                 <Edit />
                                                 <span className="hidden md:inline">Edit</span>
                                             </Button>
-                                        </CreateOrUpdateOrDeleteMajorForm>
-                                        <CreateOrUpdateOrDeleteMajorForm type="delete" major={major}>
+                                        </MajorForm>
+                                        <MajorForm type="delete" major={major}>
                                             <Button variant={'destructive'}>
                                                 <Trash />
                                                 <span className="hidden md:inline">Hapus</span>
                                             </Button>
-                                        </CreateOrUpdateOrDeleteMajorForm>
+                                        </MajorForm>
                                     </div>
                                 </TableCell>
                             </TableRow>

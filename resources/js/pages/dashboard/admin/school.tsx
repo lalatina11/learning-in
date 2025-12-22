@@ -2,7 +2,7 @@ import ClassRoomTable from '@/components/admin-components/class-room-table';
 import MajorTable from '@/components/admin-components/major-table';
 import DashboardPageContainer from '@/components/containers/dashboard-page-container';
 import ClassRoomForm from '@/components/forms/class-room-form';
-import CreateOrUpdateMajorForm from '@/components/forms/major-form';
+import MajorForm from '@/components/forms/major-form';
 import { Button } from '@/components/ui/button';
 import { ClassRoomWithMajor, Major } from '@/types';
 import { Plus } from 'lucide-react';
@@ -18,11 +18,11 @@ const School = ({ majors, classRooms }: Props) => {
     return (
         <DashboardPageContainer>
             <div className="flex flex-col gap-2">
-                <CreateOrUpdateMajorForm type="create">
+                <MajorForm type="create">
                     <Button className="w-fit">
                         <Plus /> Tambah Jurusan
                     </Button>
-                </CreateOrUpdateMajorForm>
+                </MajorForm>
                 <MajorTable majors={majors} />
             </div>
             <div className="flex flex-col gap-2">
