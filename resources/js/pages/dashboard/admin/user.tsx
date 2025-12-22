@@ -1,6 +1,6 @@
 import UserTable from '@/components/admin-components/user-table';
 import DashboardPageContainer from '@/components/containers/dashboard-page-container';
-import CreateOrUpdateUserForm from '@/components/forms/create-or-update-user-form';
+import CreateOrUpdateUserForm from '@/components/forms/user-form';
 import { User as Usertype } from '@/types';
 import { User } from 'lucide-react';
 

@@ -22,7 +22,7 @@ interface Props {
     user?: User;
 }
 
-const CreateOrUpdateUserForm = ({ user }: Props) => {
+export default function CreateOrUpdateUserForm({ user }: Props) {
     const [mode] = useState<'update' | 'create'>(user !== undefined ? 'update' : 'create');
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -229,6 +229,4 @@ const CreateOrUpdateUserForm = ({ user }: Props) => {
             </SheetContent>
         </Sheet>
     );
-};
-
-export default CreateOrUpdateUserForm;
+}
