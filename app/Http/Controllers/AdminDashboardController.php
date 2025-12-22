@@ -99,6 +99,9 @@ class AdminDashboardController extends Controller
     public function deleteUser($id)
     {
         $user = User::findOrFail($id);
+        if (!$user) {
+            return redirect()->back()->withErrors('Pengguna tidak valid', 'server');
+        }
         $user->delete();
         return redirect()->back();
     }
