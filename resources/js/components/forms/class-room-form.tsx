@@ -166,13 +166,13 @@ function Update({ handleCloseDialog, classRoom }: ActionProps) {
                 const errorMessage = err.server[0] || 'Terjadi kesalahan';
                 form.setError('root', { message: errorMessage });
 
-                toast.error(`Gagal Mengubah Jurusan ini`, {
+                toast.error(`Gagal Mengubah Kelas ini`, {
                     description: errorMessage,
                     action: { label: 'OK', onClick: () => {} },
                 });
             },
             onSuccess: () => {
-                toast.success(`Berhasil Mengubah Jurusan ini`, {
+                toast.success(`Berhasil Mengubah Kelas ini`, {
                     action: { label: 'OK', onClick: () => {} },
                 });
                 form.reset();
@@ -203,7 +203,7 @@ function Update({ handleCloseDialog, classRoom }: ActionProps) {
                                     onValueChange={(val) => form.setValue('major_id', Number(val))}
                                 >
                                     <SelectTrigger className="w-[180px]">
-                                        <SelectValue placeholder={classRoom?.major.name || 'Pilih Jurusan'} />
+                                        <SelectValue placeholder={majors.find((major) => major.id === field.value)?.name || 'Pilih Jurusan'} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
