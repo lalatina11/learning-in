@@ -38,6 +38,13 @@ Route::middleware(['auth.middleware'])->group(function () {
                     Route::patch('/{id}', [AdminDashboardController::class, 'updateClassRoom'])->name('dashboard.admin.manage.school.update.class-room');
                     Route::delete('/{id}', [AdminDashboardController::class, 'deleteClassRoom'])->name('dashboard.admin.manage.school.delete.class-room');
                 });
+                Route::prefix('/study-room')->group(function () {
+                    Route::post('/', [AdminDashboardController::class, 'createStudyRoom'])->name('dashboard.admin.manage.school.create.study-room');
+                    Route::patch('/{id}', [AdminDashboardController::class, 'updateStudyRoom'])->name('dashboard.admin.manage.school.update.study-room');
+                    Route::delete('/{id}', [AdminDashboardController::class, 'deleteStudyRoom'])->name('dashboard.admin.manage.school.delete.study-room');
+                    Route::get('/{id}/details', [AdminDashboardController::class, 'showStudyRoomDetail'])->name('dashboard.admin.manage.school.update.study-room.show-details');
+                    Route::patch('/{id}/add-student', [AdminDashboardController::class, 'addStudentOnStudyRoom'])->name('dashboard.admin.manage.school.update.study-room.add-student');
+                });
             });
         });
         Route::middleware(['teacher.middleware'])->prefix('/teacher')->group(function () {
