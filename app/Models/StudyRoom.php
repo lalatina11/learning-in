@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StudyRoom extends Model
 {
-    protected $fillable = ['teacher_id', 'classroom_id'];
+    protected $fillable = ['teacher_id', 'classroom_id', 'learning_subject_id'];
 
     public function teacher()
     {
@@ -25,5 +25,10 @@ class StudyRoom extends Model
     public function studentsCount()
     {
         return $this->students()->count();
+    }
+
+    public function learning_subject()
+    {
+        return $this->belongsTo(LearningSubject::class, 'learning_subject_id');
     }
 }
