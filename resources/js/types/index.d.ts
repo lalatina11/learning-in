@@ -1,3 +1,8 @@
+interface TimeStamp {
+    created_at: string;
+    updated_at: string;
+}
+
 export interface Auth {
     user: User;
 }
@@ -28,9 +33,24 @@ export interface GroupMemberSlide {
     image: string;
 }
 
-interface Major {
+interface Major extends TimeStamp {
     id: number;
     name: string;
+}
+
+interface ClassRoom extends TimeStamp {
+    id: number;
+    major_id: number;
+    grade: 'XI' | 'XI' | 'XII';
     created_at: Date;
     updated_at: Date;
+}
+
+interface ClassRoomWithMajor extends ClassRoom {
+    id: number;
+    major_id: number;
+    grade: 'XI' | 'XI' | 'XII';
+    created_at: Date;
+    updated_at: Date;
+    major: Major;
 }
