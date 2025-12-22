@@ -41,7 +41,7 @@ export interface Major extends TimeStamp {
 export interface ClassRoom extends TimeStamp {
     id: number;
     major_id: number;
-    grade: 'XI' | 'XI' | 'XII';
+    grade: 'X' | 'XI' | 'XII';
     created_at: Date;
     updated_at: Date;
 }
@@ -49,7 +49,6 @@ export interface ClassRoom extends TimeStamp {
 export interface ClassRoomWithMajor extends ClassRoom {
     id: number;
     major_id: number;
-    grade: 'XI' | 'XI' | 'XII';
     created_at: Date;
     updated_at: Date;
     major: Major;
