@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClassRoom;
 use App\Models\Major;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class AdminDashboardController extends Controller
@@ -105,7 +105,8 @@ class AdminDashboardController extends Controller
     public function showSchoolManagementDashboard()
     {
         $majors = Major::all();
-        return Inertia::render('dashboard/admin/school', compact('majors'));
+        $classRooms = ClassRoom::with('major')->get();
+        return Inertia::render('dashboard/admin/school', compact('majors', 'classRooms'));
     }
 
     public function createMajor(Request $request)
@@ -158,4 +159,68 @@ class AdminDashboardController extends Controller
 
         return redirect()->back();
     }
+
+    public function createClassRoom(Request $request)
+    {
+        $validated = $request->validate([
+            "major_id" => "int|min:1",
+            "grade" => "string"
+        ]);
+
+        $allowedGrade = ["X", "XI", "XII"];
+        if (!in_array($validated['grade'], $allowedGrade, true)) {
+            return redirect()->back()->withErrors('Tingkatan kelas tidak valid!', 'server');
+        }
+        $existingMajor = Major::findOrFail($validated['major_id']);
+        if (!$existingMajor) {
+            return redirect()->back()->withErrors('Jurusan tidak valid!', 'server');
+
+        }
+
+        ClassRoom::create($validated);
+
+        return redirect()->back();
+    }
+
+    public function updateClassRoom($id, Request $request)
+    {
+        $validated = $request->validate([
+            "major_id" => "int|min:1",
+            "grade" => "string"
+        ]);
+
+        $existingClassRoom = ClassRoom::findOrFail($id);
+
+        if (!$existingClassRoom) {
+            return redirect()->back()->withErrors('Kelas tidak valid!', 'server');
+        }
+
+        $allowedGrade = ["X", "XI", "XII"];
+        if (!in_array($validated['grade'], $allowedGrade, true)) {
+            return redirect()->back()->withErrors('Tingkatan kelas tidak valid!', 'server');
+        }
+        $existingMajor = Major::findOrFail($validated['major_id']);
+        if (!$existingMajor) {
+            return redirect()->back()->withErrors('Jurusan tidak valid!', 'server');
+
+        }
+
+        $existingClassRoom->update($validated);
+
+        return redirect()->back();
+    }
+    public function deleteClassRoom($id, )
+    {
+
+        $existingClassRoom = Major::findOrFail($id);
+
+        if (!$existingClassRoom) {
+            return redirect()->back()->withErrors('Kelas tidak valid!', 'server');
+        }
+
+        $existingClassRoom->delete();
+
+        return redirect()->back();
+    }
 }
+

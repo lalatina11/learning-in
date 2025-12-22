@@ -33,6 +33,11 @@ Route::middleware(['auth.middleware'])->group(function () {
                     Route::patch('/{id}', [AdminDashboardController::class, 'updateMajor'])->name('dashboard.admin.manage.school.update.major');
                     Route::delete('/{id}', [AdminDashboardController::class, 'deleteMajor'])->name('dashboard.admin.manage.school.delete.major');
                 });
+                Route::prefix('/class-room')->group(function () {
+                    Route::post('/', [AdminDashboardController::class, 'createClassroom'])->name('dashboard.admin.manage.school.create.class-room');
+                    Route::patch('/{id}', [AdminDashboardController::class, 'updateClassRoom'])->name('dashboard.admin.manage.school.update.class-room');
+                    Route::delete('/{id}', [AdminDashboardController::class, 'deleteClassRoom'])->name('dashboard.admin.manage.school.delete.class-room');
+                });
             });
         });
         Route::middleware(['teacher.middleware'])->prefix('/teacher')->group(function () {
