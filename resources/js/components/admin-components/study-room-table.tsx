@@ -40,7 +40,7 @@ const StudyRoomTable = ({ studyRooms }: Props) => {
                                     <TableCell>
                                         <div className="flex items-center justify-center gap-2">
                                             <Button variant={'destructive'} asChild>
-                                                <Link href={`/dashboard/admin/school/study-room/${studyRoom.id}/detail`}>
+                                                <Link href={`/dashboard/admin/school/study-room/${studyRoom.id}/details`}>
                                                     <ScanEye />
                                                     <span className="hidden md:inline">Detail</span>
                                                 </Link>
