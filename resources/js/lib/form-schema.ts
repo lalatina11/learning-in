@@ -28,7 +28,7 @@ export const majorSchema = z.object({
 export type MajorSchemaType = z.infer<typeof majorSchema>;
 
 export const classRoomSchema = z.object({
-    major_id: z.coerce.number().min(1).default(0),
+    major_id: z.coerce.number().min(1, 'Mohon Masukan jurusan yang sesuai').default(0),
     grade: z.enum(gradeEnum),
 });
 
