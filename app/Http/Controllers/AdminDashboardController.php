@@ -301,5 +301,16 @@ class AdminDashboardController extends Controller
 
         return redirect()->back();
     }
+
+    public function showStudyRoomDetail($id)
+    {
+        $studyRoom = StudyRoom::where('id', $id)->with('teacher')->with('students')->with('classroom')->first();
+        if (!$studyRoom) {
+            return redirect()->route('dashboard.admin.manage.school.index');
+        }
+        $major = Major::where('id', $studyRoom->classroom->major_id)->first();
+        $studyRoom->classroom->major = $major;
+        return Inertia::render('dashboard/admin/study-room-detail', compact('studyRoom'));
+    }
 }
 

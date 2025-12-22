@@ -1,7 +1,7 @@
 import { ClassRoomWithMajor, StudyRoomWithClassRoomAndTeacher } from '@/types';
 import { PageProps } from '@/types/page-props';
-import { usePage } from '@inertiajs/react';
-import { Edit, Trash } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { Edit, ScanEye, Trash } from 'lucide-react';
 import StudyRoomForm from '../forms/study-room-form';
 import { Button } from '../ui/button';
 import { CardContent } from '../ui/card';
@@ -39,6 +39,12 @@ const StudyRoomTable = ({ studyRooms }: Props) => {
                                     <TableCell>{studyRoom.teacher.name}</TableCell>
                                     <TableCell>
                                         <div className="flex items-center justify-center gap-2">
+                                            <Button variant={'destructive'} asChild>
+                                                <Link href={`/dashboard/admin/school/study-room/${studyRoom.id}/detail`}>
+                                                    <ScanEye />
+                                                    <span className="hidden md:inline">Detail</span>
+                                                </Link>
+                                            </Button>
                                             <StudyRoomForm studyRoom={studyRoom} type="update">
                                                 <Button>
                                                     <Edit />

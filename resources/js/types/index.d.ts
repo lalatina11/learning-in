@@ -67,8 +67,16 @@ export interface StudyRoomWithTeacher extends StudyRoom {
 export interface StudyRoomWithClassRoom extends StudyRoom {
     classroom: ClassRoom;
 }
+export interface StudyRoomWithStudent extends StudyRoom {
+    classroom: ClassRoom;
+}
 
 export interface StudyRoomWithClassRoomAndTeacher extends StudyRoom {
     classroom: ClassRoom;
     teacher: User;
+}
+export interface StudyRoomWithClassRoomAndTeacherAndTeacher extends StudyRoom {
+    classroom: ClassRoomWithMajor;
+    teacher: User;
+    students: Array<User>;
 }
