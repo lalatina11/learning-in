@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ClassRoom;
 use App\Models\Major;
+use App\Models\StudyRoom;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -106,7 +107,9 @@ class AdminDashboardController extends Controller
     {
         $majors = Major::all();
         $classRooms = ClassRoom::with('major')->get();
-        return Inertia::render('dashboard/admin/school', compact('majors', 'classRooms'));
+        $teachers = User::where('role', "TEACHER")->get();
+        $studyRooms = StudyRoom::with('teacher')->with('classroom')->get();
+        return Inertia::render('dashboard/admin/school', compact('majors', 'classRooms', 'teachers', 'studyRooms'));
     }
 
     public function createMajor(Request $request)
@@ -219,6 +222,72 @@ class AdminDashboardController extends Controller
         }
 
         $existingClassRoom->delete();
+
+        return redirect()->back();
+    }
+
+    public function createStudyRoom(Request $request)
+    {
+        $validated = $request->validate([
+            'classroom_id' => "int|min:1",
+            'teacher_id' => "int|min:1"
+        ]);
+
+        $existingClassRoom = ClassRoom::findOrFail($validated["classroom_id"]);
+
+        if (!$existingClassRoom) {
+            return redirect()->back()->withErrors('Kelas tidak valid!', 'server');
+        }
+
+        $existingTeacher = User::where('id', $validated["teacher_id"])->where('role', "TEACHER")->firstOrFail();
+
+        if (!$existingTeacher) {
+            return redirect()->back()->withErrors('Guru tidak valid!', 'server');
+        }
+
+        StudyRoom::create($validated);
+
+        return redirect()->back();
+    }
+    public function updateStudyRoom($id, Request $request)
+    {
+        $validated = $request->validate([
+            'classroom_id' => "int|min:1",
+            'teacher_id' => "int|min:1"
+        ]);
+
+        $existingStudyRoom = StudyRoom::findOrFail($id);
+
+        if (!$existingStudyRoom) {
+            return redirect()->back()->withErrors('KBM tidak valid!', 'server');
+        }
+
+        $existingClassRoom = ClassRoom::findOrFail($validated["classroom_id"]);
+
+        if (!$existingClassRoom) {
+            return redirect()->back()->withErrors('Kelas tidak valid!', 'server');
+        }
+
+        $existingTeacher = User::where('id', $validated["teacher_id"])->where('role', "TEACHER")->firstOrFail();
+
+        if (!$existingTeacher) {
+            return redirect()->back()->withErrors('Guru tidak valid!', 'server');
+        }
+
+        $existingStudyRoom->update($validated);
+
+        return redirect()->back();
+    }
+    public function deleteStudyRoom($id)
+    {
+
+        $existingStudyRoom = StudyRoom::findOrFail($id);
+
+        if (!$existingStudyRoom) {
+            return redirect()->back()->withErrors('KBM tidak valid!', 'server');
+        }
+
+        $existingStudyRoom->delete();
 
         return redirect()->back();
     }
