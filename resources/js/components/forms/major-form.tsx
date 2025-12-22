@@ -97,7 +97,7 @@ function Create({ handleCloseDialog }: ActionProps) {
                     />
                 </FieldGroup>
                 <div className="flex justify-end gap-2">
-                    <Button type="button" variant={'outline'}>
+                    <Button onClick={handleCloseDialog} type="button" variant={'outline'}>
                         Batal
                     </Button>
                     <Button disabled={isFormBusy} type="submit">
@@ -164,7 +164,7 @@ function Update({ handleCloseDialog, major }: ActionProps) {
                     />
                 </FieldGroup>
                 <div className="flex justify-end gap-2">
-                    <Button type="button" variant={'outline'}>
+                    <Button onClick={handleCloseDialog} type="button" variant={'outline'}>
                         Batal
                     </Button>
                     <Button disabled={isFormBusy} type="submit">
