@@ -33,12 +33,12 @@ export interface GroupMemberSlide {
     image: string;
 }
 
-interface Major extends TimeStamp {
+export interface Major extends TimeStamp {
     id: number;
     name: string;
 }
 
-interface ClassRoom extends TimeStamp {
+export interface ClassRoom extends TimeStamp {
     id: number;
     major_id: number;
     grade: 'XI' | 'XI' | 'XII';
@@ -46,11 +46,30 @@ interface ClassRoom extends TimeStamp {
     updated_at: Date;
 }
 
-interface ClassRoomWithMajor extends ClassRoom {
+export interface ClassRoomWithMajor extends ClassRoom {
     id: number;
     major_id: number;
     grade: 'XI' | 'XI' | 'XII';
     created_at: Date;
     updated_at: Date;
     major: Major;
+}
+
+export interface StudyRoom extends TimeStamp {
+    id: int;
+    classroom_id: int;
+    teacher_id: int;
+}
+
+export interface StudyRoomWithTeacher extends StudyRoom {
+    teacher: User;
+}
+
+export interface StudyRoomWithClassRoom extends StudyRoom {
+    classroom: ClassRoom;
+}
+
+export interface StudyRoomWithClassRoomAndTeacher extends StudyRoom {
+    classroom: ClassRoom;
+    teacher: User;
 }
