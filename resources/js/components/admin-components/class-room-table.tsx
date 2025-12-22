@@ -21,6 +21,7 @@ const ClassRoomTable = ({ classRooms }: Props) => {
                     <TableHeader>
                         <TableRow>
                             <TableHead>No</TableHead>
+                            <TableHead>Tingkatan</TableHead>
                             <TableHead>Jurusan</TableHead>
                             <TableHead className="text-center">Action</TableHead>
                         </TableRow>
