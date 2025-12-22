@@ -48,10 +48,21 @@ function Create({ handleCloseDialog }: ActionProps) {
     const [isLoading, setIsLoading] = useState(false);
     const form = useForm({
         resolver: zodResolver(classRoomSchema),
-        defaultValues: { major_id: 1, grade: 'X' as ClassRoomSchemaType['grade'] },
+        defaultValues: { major_id: 0, grade: 'X' as ClassRoomSchemaType['grade'] },
     });
 
     function onSubmit(values: ClassRoomSchemaType) {
+        const majorIds = majors.map((major) => major.id);
+        if (!majorIds.includes(values.major_id) && !gradeEnum.includes(values.grade)) {
+            form.setError('grade', { message: 'Mohon isi jurusan dengan benar' });
+            return form.setError('grade', { message: 'Mohon isi tingkatan dengan benar' });
+        }
+        if (!majorIds.includes(values.major_id)) {
+            return form.setError('grade', { message: 'Mohon isi jurusan dengan benar' });
+        }
+        if (!gradeEnum.includes(values.grade)) {
+            return form.setError('grade', { message: 'Mohon isi tingkatan dengan benar' });
+        }
         const requestOptions = {
             onStart: () => setIsLoading(true),
             onFinish: () => setIsLoading(false),
@@ -116,9 +127,12 @@ function Create({ handleCloseDialog }: ActionProps) {
                         render={({ field, fieldState }) => (
                             <Field data-invalid={fieldState.invalid}>
                                 <FieldLabel htmlFor={field.name}>Tingkatan</FieldLabel>
-                                <Select onValueChange={(val) => form.setValue('grade', val as ClassRoomSchemaType['grade'])}>
+                                <Select
+                                    defaultValue={field.value || undefined}
+                                    onValueChange={(val) => form.setValue('grade', val as ClassRoomSchemaType['grade'])}
+                                >
                                     <SelectTrigger className="w-[180px]">
-                                        <SelectValue placeholder="Pilih Tingkatan" />
+                                        <SelectValue placeholder={field.value || 'Pilih Tingkatan'} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
