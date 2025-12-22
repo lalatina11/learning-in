@@ -192,7 +192,7 @@ function Create({ handleCloseSheet }: ActionProps) {
                         />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
-                        <Button type="button" onClick={handleCloseSheet} variant="destructive">
+                        <Button type="button" onClick={handleCloseSheet} variant="outline">
                             Batal
                         </Button>
                         <Button disabled={isLoading} type="submit">
@@ -346,7 +346,7 @@ function Update({ user, handleCloseSheet }: ActionProps) {
                         />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
-                        <Button type="button" onClick={handleCloseSheet} variant="destructive">
+                        <Button type="button" onClick={handleCloseSheet} variant="outline">
                             Batal
                         </Button>
                         <Button disabled={isLoading} type="submit">
@@ -393,10 +393,10 @@ function Delete({ handleCloseSheet, user }: ActionProps) {
             </SheetHeader>
             <ScrollArea className="overflow-y-auto">
                 <div className="grid grid-cols-2 gap-2 px-5">
-                    <Button type="button" onClick={handleCloseSheet} variant="destructive">
+                    <Button type="button" onClick={handleCloseSheet} variant="outline">
                         Batal
                     </Button>
-                    <Button disabled={isLoading} onClick={handleDelete}>
+                    <Button variant={'destructive'} disabled={isLoading} onClick={handleDelete}>
                         {isLoading ? <Spinner /> : 'Hapus'}
                     </Button>
                 </div>
