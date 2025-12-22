@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->enum('grade', ["X", "XI", "XII"]);
             $table->foreignId("major_id")->constrained('majors', 'id')->onDelete("cascade");
             $table->timestamps();
+            $table->unique(["grade", "major_id"]);
         });
     }
 
