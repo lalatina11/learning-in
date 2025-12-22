@@ -23,6 +23,7 @@ const ClassRoomTable = ({ classRooms }: Props) => {
                             <TableHead>No</TableHead>
                             <TableHead>Tingkatan</TableHead>
                             <TableHead>Jurusan</TableHead>
+                            <TableHead>Nama Kelas</TableHead>
                             <TableHead className="text-center">Action</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -32,6 +33,7 @@ const ClassRoomTable = ({ classRooms }: Props) => {
                                 <TableCell className="font-medium">{index + 1}</TableCell>
                                 <TableCell>{classRoom.grade}</TableCell>
                                 <TableCell>{classRoom.major.name}</TableCell>
+                                <TableCell>{`${classRoom.grade} ${classRoom.major.name}`}</TableCell>
                                 <TableCell>
                                     <div className="flex items-center justify-center gap-2">
                                         <ClassRoomForm type="update" classRoom={classRoom}>
