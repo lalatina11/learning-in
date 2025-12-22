@@ -5,8 +5,8 @@ import { switchUserRoleToCapitalize } from '@/lib/switch-cases';
 import { User } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from '@inertiajs/react';
-import { Edit, Eye, EyeOff, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import { ReactNode, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Field, FieldDescription, FieldError, FieldLabel } from '../ui/field';
@@ -20,15 +20,194 @@ const roleOptions = ['ADMIN', 'STUDENT', 'TEACHER'] as const as Array<RegisterSc
 
 interface Props {
     user?: User;
+    children: ReactNode;
+    type: 'create' | 'update' | 'delete';
 }
 
-export default function CreateOrUpdateUserForm({ user }: Props) {
-    const [mode] = useState<'update' | 'create'>(user !== undefined ? 'update' : 'create');
-    const [isOpen, setIsOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isShowPassword, setIsShowPassword] = useState(false);
+interface ActionProps {
+    user?: User;
+    handleCloseSheet: () => void;
+}
 
-    const isCreateForm = mode === 'create';
+export default function CreateOrUpdateUserForm({ user, children, type }: Props) {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleCloseSheet = () => {
+        setIsOpen(false);
+    };
+
+    return (
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>{children}</SheetTrigger>
+            {type === 'create' ? (
+                <Create handleCloseSheet={handleCloseSheet} />
+            ) : type === 'update' ? (
+                <Update handleCloseSheet={handleCloseSheet} user={user} />
+            ) : (
+                <Delete handleCloseSheet={handleCloseSheet} user={user} />
+            )}
+        </Sheet>
+    );
+}
+
+function Create({ handleCloseSheet }: ActionProps) {
+    const [isShowPassword, setIsShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const form = useForm({
+        resolver: zodResolver(registerSchema),
+        defaultValues: {
+            master_number: '',
+            email: '',
+            name: '',
+            password: '',
+            role: 'STUDENT' as RegisterSchemaType['role'],
+        },
+    });
+
+    const onSubmit = async (body: RegisterSchemaType) => {
+        const requestOptions = {
+            onStart: () => setIsLoading(true),
+            onFinish: () => setIsLoading(false),
+            onError: (err: any) => {
+                const errorMessage = err.server[0] || 'Terjadi kesalahan';
+                form.setError('root', { message: errorMessage });
+
+                toast.error(`Gagal Menambahkan Pengguna`, {
+                    description: errorMessage,
+                    action: { label: 'OK', onClick: () => {} },
+                });
+            },
+            onSuccess: () => {
+                toast.success(`Berhasil Menambahkan Pengguna`, {
+                    action: { label: 'OK', onClick: () => {} },
+                });
+                handleCloseSheet();
+            },
+        };
+
+        // Execute request
+        router.post('/dashboard/admin/user', body, requestOptions);
+    };
+
+    return (
+        <SheetContent>
+            <SheetHeader>
+                <SheetTitle>Tambahkan Pengguna</SheetTitle>
+                <SheetDescription>Mohon Masukkan data yang sesuai</SheetDescription>
+            </SheetHeader>
+            <ScrollArea className="overflow-y-auto p-5">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 p-1">
+                    <div className="flex flex-col gap-3">
+                        {form.formState.errors.root && <FieldError errors={[form.formState.errors.root]} />}
+                        <Controller
+                            control={form.control}
+                            name="master_number"
+                            render={({ field, fieldState }) => (
+                                <Field data-invalid={!!fieldState.error}>
+                                    <FieldLabel htmlFor={field.name}>NIM</FieldLabel>
+                                    <Input {...field} id={field.name} autoComplete="off" aria-invalid={fieldState.invalid} placeholder="1924****" />
+                                    <FieldDescription>Masukkan NIM/NIK Pengguna</FieldDescription>
+                                    <FieldError errors={[fieldState.error]} />
+                                </Field>
+                            )}
+                        />
+                        <Controller
+                            control={form.control}
+                            name="name"
+                            render={({ field, fieldState }) => (
+                                <Field data-invalid={!!fieldState.error}>
+                                    <FieldLabel htmlFor={field.name}>Nama</FieldLabel>
+                                    <Input {...field} id={field.name} autoComplete="off" aria-invalid={fieldState.invalid} placeholder="John Doe" />
+                                    <FieldDescription>Masukkan Nama Pengguna</FieldDescription>
+                                    <FieldError errors={[fieldState.error]} />
+                                </Field>
+                            )}
+                        />
+                        <Controller
+                            control={form.control}
+                            name="email"
+                            render={({ field, fieldState }) => (
+                                <Field data-invalid={!!fieldState.error}>
+                                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                                    <Input
+                                        {...field}
+                                        id={field.name}
+                                        autoComplete="off"
+                                        aria-invalid={fieldState.invalid}
+                                        placeholder="john@doe.com"
+                                    />
+                                    <FieldDescription>Masukkan Email Pengguna</FieldDescription>
+                                    <FieldError errors={[fieldState.error]} />
+                                </Field>
+                            )}
+                        />
+                        <Controller
+                            control={form.control}
+                            name="password"
+                            render={({ field, fieldState }) => (
+                                <Field data-invalid={!!fieldState.error}>
+                                    <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                                    <InputGroup>
+                                        <InputGroupInput
+                                            {...field}
+                                            id={field.name}
+                                            autoComplete="off"
+                                            aria-invalid={fieldState.invalid}
+                                            placeholder="******"
+                                            type={isShowPassword ? 'text' : 'password'}
+                                        />
+                                        <InputGroupAddon align={'inline-end'}>
+                                            <InputGroupButton onClick={() => setIsShowPassword((prev) => !prev)} type="button">
+                                                {isShowPassword ? <EyeOff /> : <Eye />}
+                                            </InputGroupButton>
+                                        </InputGroupAddon>
+                                    </InputGroup>
+                                    <FieldDescription>Password Optional</FieldDescription>
+                                    <FieldError errors={[fieldState.error]} />
+                                </Field>
+                            )}
+                        />
+                        <Controller
+                            control={form.control}
+                            name="role"
+                            render={({ field, fieldState }) => (
+                                <Field data-invalid={!!fieldState.error}>
+                                    <FieldLabel htmlFor={field.name}>Daftarkan sebagai</FieldLabel>
+                                    <Select onValueChange={field.onChange} value={field.value}>
+                                        <SelectTrigger id={field.name}>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {roleOptions.map((option) => (
+                                                <SelectItem key={option} value={option}>
+                                                    Sebagai {switchUserRoleToCapitalize(option)}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FieldError errors={[fieldState.error]} />
+                                </Field>
+                            )}
+                        />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                        <Button type="button" onClick={handleCloseSheet} variant="destructive">
+                            Batal
+                        </Button>
+                        <Button disabled={isLoading} type="submit">
+                            {isLoading ? <Spinner /> : 'Simpan'}
+                        </Button>
+                    </div>
+                </form>
+            </ScrollArea>
+        </SheetContent>
+    );
+}
+
+function Update({ user, handleCloseSheet }: ActionProps) {
+    const [isShowPassword, setIsShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm({
         resolver: zodResolver(registerSchema),
@@ -41,27 +220,7 @@ export default function CreateOrUpdateUserForm({ user }: Props) {
         },
     });
 
-    const handleCloseSheet = () => {
-        setIsOpen(false);
-    };
-
     const onSubmit = async (body: RegisterSchemaType) => {
-        // Early validation for create form
-        if (isCreateForm && body.password.trim().length < 8) {
-            form.setError('password', { message: 'Minimal 8 karakter' });
-            toast.error('Gagal Membuat Pengguna baru', {
-                description: 'Password tidak valid',
-                action: { label: 'OK', onClick: () => {} },
-            });
-            return;
-        }
-
-        // Determine route and method
-        const isUpdate = user !== undefined && !isCreateForm;
-        const endpoint = isUpdate ? `/dashboard/admin/user/${user.id}` : '/dashboard/admin/user';
-        const method = isUpdate ? 'patch' : 'post';
-
-        // Common request options
         const requestOptions = {
             onStart: () => setIsLoading(true),
             onFinish: () => setIsLoading(false),
@@ -69,164 +228,179 @@ export default function CreateOrUpdateUserForm({ user }: Props) {
                 const errorMessage = err.server[0] || 'Terjadi kesalahan';
                 form.setError('root', { message: errorMessage });
 
-                toast.error(`Gagal ${isCreateForm ? 'Membuat' : 'Mengedit'} Pengguna${isCreateForm ? ' Baru' : ''}`, {
+                toast.error(`Gagal Menghapus Pengguna`, {
                     description: errorMessage,
                     action: { label: 'OK', onClick: () => {} },
                 });
             },
             onSuccess: () => {
-                toast.success(`Berhasil ${isCreateForm ? 'Membuat' : 'Mengedit'} Pengguna${isCreateForm ? ' Baru' : ''}`, {
+                toast.success(`Berhasil Menghapus Pengguna`, {
                     action: { label: 'OK', onClick: () => {} },
                 });
-                if (isCreateForm) {
-                    form.reset();
-                }
                 handleCloseSheet();
             },
         };
 
         // Execute request
-        router[method](endpoint, body, requestOptions);
+        router.patch(`/dashboard/admin/user/${user?.id}`, body, requestOptions);
     };
     return (
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-                <Button onClick={() => setIsOpen(true)}>
-                    {isCreateForm ? (
-                        <>
-                            <Plus /> Daftarkan Pengguna baru
-                        </>
-                    ) : (
-                        <>
-                            <Edit />
-                            <span className="hidden md:block">Edit</span>
-                        </>
-                    )}
-                </Button>
-            </SheetTrigger>
-            <SheetContent>
-                <SheetHeader>
-                    <SheetTitle>{user !== undefined ? `Edit ${user?.name}` : 'Tambahkan Pengguna'}</SheetTitle>
-                    <SheetDescription>Mohon Masukkan data yang sesuai</SheetDescription>
-                </SheetHeader>
-                <ScrollArea className="overflow-y-auto p-5">
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 p-1">
-                        <div className="flex flex-col gap-3">
-                            {form.formState.errors.root && <FieldError errors={[form.formState.errors.root]} />}
-                            <Controller
-                                control={form.control}
-                                name="master_number"
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={!!fieldState.error}>
-                                        <FieldLabel htmlFor={field.name}>NIM</FieldLabel>
-                                        <Input
+        <SheetContent>
+            <SheetHeader>
+                <SheetTitle>Tambahkan Pengguna</SheetTitle>
+                <SheetDescription>Mohon Masukkan data yang sesuai</SheetDescription>
+            </SheetHeader>
+            <ScrollArea className="overflow-y-auto p-5">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 p-1">
+                    <div className="flex flex-col gap-3">
+                        {form.formState.errors.root && <FieldError errors={[form.formState.errors.root]} />}
+                        <Controller
+                            control={form.control}
+                            name="master_number"
+                            render={({ field, fieldState }) => (
+                                <Field data-invalid={!!fieldState.error}>
+                                    <FieldLabel htmlFor={field.name}>NIM</FieldLabel>
+                                    <Input {...field} id={field.name} autoComplete="off" aria-invalid={fieldState.invalid} placeholder="1924****" />
+                                    <FieldDescription>Masukkan NIM/NIK Pengguna</FieldDescription>
+                                    <FieldError errors={[fieldState.error]} />
+                                </Field>
+                            )}
+                        />
+                        <Controller
+                            control={form.control}
+                            name="name"
+                            render={({ field, fieldState }) => (
+                                <Field data-invalid={!!fieldState.error}>
+                                    <FieldLabel htmlFor={field.name}>Nama</FieldLabel>
+                                    <Input {...field} id={field.name} autoComplete="off" aria-invalid={fieldState.invalid} placeholder="John Doe" />
+                                    <FieldDescription>Masukkan Nama Pengguna</FieldDescription>
+                                    <FieldError errors={[fieldState.error]} />
+                                </Field>
+                            )}
+                        />
+                        <Controller
+                            control={form.control}
+                            name="email"
+                            render={({ field, fieldState }) => (
+                                <Field data-invalid={!!fieldState.error}>
+                                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                                    <Input
+                                        {...field}
+                                        id={field.name}
+                                        autoComplete="off"
+                                        aria-invalid={fieldState.invalid}
+                                        placeholder="john@doe.com"
+                                    />
+                                    <FieldDescription>Masukkan Email Pengguna</FieldDescription>
+                                    <FieldError errors={[fieldState.error]} />
+                                </Field>
+                            )}
+                        />
+                        <Controller
+                            control={form.control}
+                            name="password"
+                            render={({ field, fieldState }) => (
+                                <Field data-invalid={!!fieldState.error}>
+                                    <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                                    <InputGroup>
+                                        <InputGroupInput
                                             {...field}
                                             id={field.name}
                                             autoComplete="off"
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="1924****"
+                                            placeholder="******"
+                                            type={isShowPassword ? 'text' : 'password'}
                                         />
-                                        <FieldDescription>Masukkan NIM/NIK Pengguna</FieldDescription>
-                                        <FieldError errors={[fieldState.error]} />
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                control={form.control}
-                                name="name"
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={!!fieldState.error}>
-                                        <FieldLabel htmlFor={field.name}>Nama</FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id={field.name}
-                                            autoComplete="off"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="John Doe"
-                                        />
-                                        <FieldDescription>Masukkan Nama Pengguna</FieldDescription>
-                                        <FieldError errors={[fieldState.error]} />
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                control={form.control}
-                                name="email"
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={!!fieldState.error}>
-                                        <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id={field.name}
-                                            autoComplete="off"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="john@doe.com"
-                                        />
-                                        <FieldDescription>Masukkan Email Pengguna</FieldDescription>
-                                        <FieldError errors={[fieldState.error]} />
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                control={form.control}
-                                name="password"
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={!!fieldState.error}>
-                                        <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                                        <InputGroup>
-                                            <InputGroupInput
-                                                {...field}
-                                                id={field.name}
-                                                autoComplete="off"
-                                                aria-invalid={fieldState.invalid}
-                                                placeholder="******"
-                                                type={isShowPassword ? 'text' : 'password'}
-                                            />
-                                            <InputGroupAddon align={'inline-end'}>
-                                                <InputGroupButton onClick={() => setIsShowPassword((prev) => !prev)} type="button">
-                                                    {isShowPassword ? <EyeOff /> : <Eye />}
-                                                </InputGroupButton>
-                                            </InputGroupAddon>
-                                        </InputGroup>
-                                        <FieldDescription>{isCreateForm ? 'Masukkan Password Pengguna' : 'Password optional'}</FieldDescription>
-                                        <FieldError errors={[fieldState.error]} />
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                control={form.control}
-                                name="role"
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={!!fieldState.error}>
-                                        <FieldLabel htmlFor={field.name}>Daftarkan sebagai</FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger id={field.name}>
-                                                <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {roleOptions.map((option) => (
-                                                    <SelectItem key={option} value={option}>
-                                                        Sebagai {switchUserRoleToCapitalize(option)}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <FieldError errors={[fieldState.error]} />
-                                    </Field>
-                                )}
-                            />
-                        </div>
-                        <div className="grid grid-cols-2 gap-3">
-                            <Button type="button" onClick={handleCloseSheet} variant="destructive">
-                                Batal
-                            </Button>
-                            <Button disabled={isLoading} type="submit">
-                                {isLoading ? <Spinner /> : 'Simpan'}
-                            </Button>
-                        </div>
-                    </form>
-                </ScrollArea>
-            </SheetContent>
-        </Sheet>
+                                        <InputGroupAddon align={'inline-end'}>
+                                            <InputGroupButton onClick={() => setIsShowPassword((prev) => !prev)} type="button">
+                                                {isShowPassword ? <EyeOff /> : <Eye />}
+                                            </InputGroupButton>
+                                        </InputGroupAddon>
+                                    </InputGroup>
+                                    <FieldDescription>Password Optional</FieldDescription>
+                                    <FieldError errors={[fieldState.error]} />
+                                </Field>
+                            )}
+                        />
+                        <Controller
+                            control={form.control}
+                            name="role"
+                            render={({ field, fieldState }) => (
+                                <Field data-invalid={!!fieldState.error}>
+                                    <FieldLabel htmlFor={field.name}>Daftarkan sebagai</FieldLabel>
+                                    <Select onValueChange={field.onChange} value={field.value}>
+                                        <SelectTrigger id={field.name}>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {roleOptions.map((option) => (
+                                                <SelectItem key={option} value={option}>
+                                                    Sebagai {switchUserRoleToCapitalize(option)}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FieldError errors={[fieldState.error]} />
+                                </Field>
+                            )}
+                        />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                        <Button type="button" onClick={handleCloseSheet} variant="destructive">
+                            Batal
+                        </Button>
+                        <Button disabled={isLoading} type="submit">
+                            {isLoading ? <Spinner /> : 'Simpan'}
+                        </Button>
+                    </div>
+                </form>
+            </ScrollArea>
+        </SheetContent>
+    );
+}
+
+function Delete({ handleCloseSheet, user }: ActionProps) {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleDelete = () => {
+        const requestOptions = {
+            onStart: () => setIsLoading(true),
+            onFinish: () => setIsLoading(false),
+            onError: (err: any) => {
+                const errorMessage = err.server[0] || 'Terjadi kesalahan';
+                toast.error(`Gagal Mengedit Pengguna`, {
+                    description: errorMessage,
+                    action: { label: 'OK', onClick: () => {} },
+                });
+            },
+            onSuccess: () => {
+                toast.success(`Berhasil Mengedit Pengguna`, {
+                    action: { label: 'OK', onClick: () => {} },
+                });
+                handleCloseSheet();
+            },
+        };
+
+        // Execute request
+        router.delete(`/dashboard/admin/user/${user?.id}`, requestOptions);
+    };
+
+    return (
+        <SheetContent>
+            <SheetHeader>
+                <SheetTitle>Hapus Pengguna</SheetTitle>
+                <SheetDescription>Apakah anda yakin akan menghapus pengguna ini? Tindakan ini tidak bisa dipulihkan</SheetDescription>
+            </SheetHeader>
+            <ScrollArea className="overflow-y-auto">
+                <div className="grid grid-cols-2 gap-2 px-5">
+                    <Button type="button" onClick={handleCloseSheet} variant="destructive">
+                        Batal
+                    </Button>
+                    <Button disabled={isLoading} onClick={handleDelete}>
+                        {isLoading ? <Spinner /> : 'Hapus'}
+                    </Button>
+                </div>
+            </ScrollArea>
+        </SheetContent>
     );
 }

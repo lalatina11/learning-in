@@ -1,8 +1,9 @@
 import UserTable from '@/components/admin-components/user-table';
 import DashboardPageContainer from '@/components/containers/dashboard-page-container';
 import CreateOrUpdateUserForm from '@/components/forms/user-form';
+import { Button } from '@/components/ui/button';
 import { User as Usertype } from '@/types';
-import { User } from 'lucide-react';
+import { Plus, User } from 'lucide-react';
 
 interface Props {
     users: Array<Usertype>;
@@ -17,7 +18,12 @@ const AdminUserManagementDashboard = ({ users }: Props) => {
     return (
         <DashboardPageContainer>
             <section>
-                <CreateOrUpdateUserForm />
+                <CreateOrUpdateUserForm type="create">
+                    <Button>
+                        <Plus />
+                        <span className="hidden md:inline">Tambahkan Pengguna</span>
+                    </Button>
+                </CreateOrUpdateUserForm>
             </section>
             {usersItem.map((item) => (
                 <section key={item.title} className="flex flex-col gap-3">

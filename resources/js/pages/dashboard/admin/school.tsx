@@ -16,8 +16,6 @@ interface Props {
 }
 
 const School = ({ majors, classRooms, studyRooms }: Props) => {
-    console.log({ studyRooms });
-
     return (
         <DashboardPageContainer>
             <div className="flex flex-col gap-2">

@@ -1,6 +1,5 @@
 import { User } from '@/types';
-import { router } from '@inertiajs/react';
-import { Trash } from 'lucide-react';
+import { Edit, Trash } from 'lucide-react';
 import CreateOrUpdateUserForm from '../forms/user-form';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
@@ -34,11 +33,18 @@ const UserTable = ({ users }: Props) => {
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>
                                     <div className="flex items-center gap-2">
-                                        <CreateOrUpdateUserForm user={user} />
-                                        <Button variant={'destructive'} onClick={() => router.delete(`/dashboard/admin/user/${user.id}`)}>
-                                            <Trash />
-                                            <span className="hidden md:block">Hapus</span>
-                                        </Button>
+                                        <CreateOrUpdateUserForm user={user} type="update">
+                                            <Button>
+                                                <Edit />
+                                                <span className="hidden md:inline">Edit</span>
+                                            </Button>
+                                        </CreateOrUpdateUserForm>
+                                        <CreateOrUpdateUserForm user={user} type="delete">
+                                            <Button variant={'destructive'}>
+                                                <Trash />
+                                                <span className="hidden md:block">Hapus</span>
+                                            </Button>
+                                        </CreateOrUpdateUserForm>
                                     </div>
                                 </TableCell>
                             </TableRow>
