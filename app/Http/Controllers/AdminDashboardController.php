@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ClassRoom;
+use App\Models\LearningSubject;
 use App\Models\Major;
 use App\Models\StudyRoom;
 use App\Models\User;
@@ -33,8 +34,14 @@ class AdminDashboardController extends Controller
             "name" => "string|min:3",
             "email" => "string|email",
             "password" => "string|min:8",
-            "role" => "required|string|in:ADMIN,TEACHER,STUDENT",
+            "role" => "required|string",
         ]);
+
+        $allowedRole = ['STUDENT', 'TEACHER', 'ADMIN'];
+
+        if (in_array($request['role'], $allowedRole)) {
+            return redirect()->back()->withErrors("Mohon masukkan role dengan benar!", "server");
+        }
 
         $existingMasterNumber = User::where("master_number", $validated['master_number'])->first();
 
@@ -112,7 +119,8 @@ class AdminDashboardController extends Controller
         $classRooms = ClassRoom::with('major')->get();
         $teachers = User::where('role', "TEACHER")->get();
         $studyRooms = StudyRoom::with('teacher')->with('classroom')->get();
-        return Inertia::render('dashboard/admin/school', compact('majors', 'classRooms', 'teachers', 'studyRooms'));
+        $learningSubjects = LearningSubject::get();
+        return Inertia::render('dashboard/admin/school', compact('majors', 'classRooms', 'teachers', 'studyRooms', 'learningSubjects'));
     }
 
     public function createMajor(Request $request)
@@ -312,5 +320,76 @@ class AdminDashboardController extends Controller
         $studyRoom->classroom->major = $major;
         return Inertia::render('dashboard/admin/study-room-detail', compact('studyRoom'));
     }
+
+    public function createLearningSubject(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|min:3',
+                'type' => 'required|string',
+            ]);
+
+            $allowedLearningSubjectType = ['THEORY', 'PRACTICE'];
+
+            if (!in_array($request['type'], $allowedLearningSubjectType)) {
+                return redirect()->back()->withErrors('Mohon masukkan tipe mata pelajaran dengan benar!', 'server');
+            }
+
+            $existingLearningSubjectByUserInput = LearningSubject::where('name', $validated['name'])->where('type', $validated['type'])->first();
+
+            if ($existingLearningSubjectByUserInput) {
+                return redirect()->back()->withErrors('Mata Pelajaran ini bentrok dengan Mata Pelajaran sebelumnya!', 'server');
+            }
+
+            LearningSubject::create($validated);
+
+            return redirect()->back();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors($e->getMessage() || "Terjadi Kesalahan", 'server');
+        }
+    }
+
+    public function updateLearningSubject($id, Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|min:3',
+            'type' => 'required|string',
+        ]);
+
+        $allowedLearningSubjectType = ['THEORY', 'PRACTICE'];
+
+        if (!in_array($request['type'], $allowedLearningSubjectType)) {
+            return redirect()->back()->withErrors('Mohon masukkan tipe mata pelajaran dengan benar!', 'server');
+        }
+
+        $existingLearningSubjectByUserInput = LearningSubject::where('name', $validated['name'])->where('type', $validated['type'])->first();
+
+        if ($existingLearningSubjectByUserInput && $existingLearningSubjectByUserInput->id != $id) {
+            return redirect()->back()->withErrors('Mata Pelajaran ini bentrok dengan Mata Pelajaran sebelumnya!', 'server');
+        }
+
+        $existingLearningSubject = LearningSubject::findOrFail($id);
+
+        if (!$existingLearningSubject) {
+            return redirect()->back()->withErrors('Mata Pelajaran ini tidak valid!', 'server');
+        }
+
+        $existingLearningSubject->update($validated);
+
+        return redirect()->back();
+    }
+    public function deleteLearningSubject($id)
+    {
+        $existingLearningSubject = LearningSubject::findOrFail($id)->first();
+
+        if (!$existingLearningSubject) {
+            return redirect()->back()->withErrors('Mata Pelajaran ini tidak valid!', 'server');
+        }
+
+        $existingLearningSubject->delete();
+
+        return redirect()->back();
+    }
+
 }
 
