@@ -461,7 +461,7 @@ class AdminDashboardController extends Controller
             return redirect()->back()->withErrors('Murid pengganti tidak valid!', 'server');
         }
 
-        $isConflictUser = DB::table('student_in_the_study_room')->select(['*'])->where('study_room_id', $existingStudyRoom->id)->where('student_id', $existingNewUser)->first();
+        $isConflictUser = DB::table('student_in_the_study_room')->select()->where('study_room_id', $existingStudyRoom->id)->where('student_id', $existingNewUser->id)->first();
 
         if ($isConflictUser && $isConflictUser->id != $existingStudent->student_id) {
             return redirect()->back()->withErrors('Murid Pengganti sudah tersedia dalam KBM', 'server');
