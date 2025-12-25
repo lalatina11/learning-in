@@ -55,6 +55,7 @@ export interface StudyRoom extends TimeStamp {
     id: int;
     classroom_id: int;
     teacher_id: int;
+    learning_subject_id: number;
 }
 
 export interface StudyRoomWithTeacher extends StudyRoom {
@@ -72,6 +73,13 @@ export interface StudyRoomWithClassRoomAndTeacher extends StudyRoom {
     classroom: ClassRoom;
     teacher: User;
 }
+
+export interface StudyRoomWithClassRoomAndTeacherAndLearningSubject extends StudyRoom {
+    classroom: ClassRoom;
+    teacher: User;
+    learning_subject: LearningSubject;
+}
+
 export interface StudyRoomWithClassRoomAndTeacherAndTeacher extends StudyRoom {
     classroom: ClassRoomWithMajor;
     teacher: User;
