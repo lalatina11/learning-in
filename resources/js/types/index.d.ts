@@ -1,3 +1,6 @@
+import { LucideProps } from 'lucide-react';
+import { ForwardRefExoticComponent, RefAttributes } from 'react';
+
 interface TimeStamp {
     created_at: string;
     updated_at: string;
@@ -85,4 +88,10 @@ export interface LearningSubject extends TimeStamp {
     id: number;
     name: string;
     type: 'PRACTICE' | 'THEORY';
+}
+
+export interface SidebarMenuNavigationItem {
+    title: string;
+    url: string;
+    icon: ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>>;
 }
