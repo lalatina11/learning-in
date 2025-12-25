@@ -80,3 +80,9 @@ export interface StudyRoomWithClassRoomAndTeacherAndTeacher extends StudyRoom {
     teacher: User;
     students: Array<User>;
 }
+
+export interface LearningSubject extends TimeStamp {
+    id: number;
+    name: string;
+    type: 'PRACTICE' | 'THEORY';
+}
