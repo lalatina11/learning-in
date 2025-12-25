@@ -12,9 +12,10 @@ return new class extends Migration {
     {
         Schema::create('learning_subjects', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique()->index();
+            $table->string('name');
             $table->enum('type', ['THEORY', 'PRACTICE'])->default('THEORY');
             $table->timestamps();
+            $table->unique(['name', 'type']);
         });
     }
 
