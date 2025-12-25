@@ -49,3 +49,9 @@ export const studyRoomSchema = z.object({
 });
 
 export type StudyRoomSchemaType = z.infer<typeof studyRoomSchema>;
+
+export const studentInTheStudyRoomSchema = z.object({
+    user_id: z.coerce.number().min(1, 'Mohon Pilih murid dengan benar!').default(0),
+});
+
+export type StudentInTheStudyRoomSchemaType = z.infer<typeof studentInTheStudyRoomSchema>;
