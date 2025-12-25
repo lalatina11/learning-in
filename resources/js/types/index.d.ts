@@ -17,14 +17,12 @@ export interface SharedData {
     [key: string]: unknown;
 }
 
-export interface User {
+export interface User extends TimeStamp {
     id: number;
     name: string;
     email: string;
     avatar?: string;
     email_verified_at: string | null;
-    created_at: string;
-    updated_at: string;
     role: 'TEACHER' | 'STUDENT' | 'ADMIN';
     master_number: string;
     [key: string]: unknown; // This allows for additional properties...
@@ -45,15 +43,11 @@ export interface ClassRoom extends TimeStamp {
     id: number;
     major_id: number;
     grade: 'X' | 'XI' | 'XII';
-    created_at: Date;
-    updated_at: Date;
 }
 
 export interface ClassRoomWithMajor extends ClassRoom {
     id: number;
     major_id: number;
-    created_at: Date;
-    updated_at: Date;
     major: Major;
 }
 
