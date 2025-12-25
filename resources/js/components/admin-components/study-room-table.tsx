@@ -1,4 +1,4 @@
-import { ClassRoomWithMajor, StudyRoomWithClassRoomAndTeacherAndLearningSubject } from '@/types';
+import { ClassRoomWithMajor, StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
 import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
 import { Edit, ScanEye, Trash } from 'lucide-react';
@@ -8,7 +8,7 @@ import { CardContent } from '../ui/card';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
 interface Props {
-    studyRooms: Array<StudyRoomWithClassRoomAndTeacherAndLearningSubject>;
+    studyRooms: Array<StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents>;
 }
 
 const StudyRoomTable = ({ studyRooms }: Props) => {
@@ -41,7 +41,7 @@ const StudyRoomTable = ({ studyRooms }: Props) => {
                                     <TableCell>{studyRoom.learning_subject.name}</TableCell>
                                     <TableCell>
                                         <div className="flex items-center justify-center gap-2">
-                                            <Button variant={'destructive'} asChild>
+                                            <Button asChild>
                                                 <Link href={`/dashboard/admin/school/study-room/${studyRoom.id}/details`}>
                                                     <ScanEye />
                                                     <span className="hidden md:inline">Detail</span>
