@@ -8,13 +8,13 @@ import LearningSubjectForm from '@/components/forms/learning-subject-form';
 import MajorForm from '@/components/forms/major-form';
 import StudyRoomForm from '@/components/forms/study-room-form';
 import { Button } from '@/components/ui/button';
-import { ClassRoomWithMajor, LearningSubject, Major, StudyRoomWithClassRoomAndTeacher } from '@/types';
+import { ClassRoomWithMajor, LearningSubject, Major, StudyRoomWithClassRoomAndTeacherAndLearningSubject } from '@/types';
 import { Plus } from 'lucide-react';
 
 interface Props {
     majors: Array<Major>;
     classRooms: Array<ClassRoomWithMajor>;
-    studyRooms: Array<StudyRoomWithClassRoomAndTeacher>;
+    studyRooms: Array<StudyRoomWithClassRoomAndTeacherAndLearningSubject>;
     learningSubjects: Array<LearningSubject>;
 }
 
