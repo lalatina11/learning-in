@@ -45,6 +45,7 @@ export type LearningSubjectSchemaType = z.infer<typeof learningSubjectSchema>;
 export const studyRoomSchema = z.object({
     classroom_id: z.coerce.number().default(0),
     teacher_id: z.coerce.number().default(0),
+    learning_subject_id: z.coerce.number().default(0),
 });
 
 export type StudyRoomSchemaType = z.infer<typeof studyRoomSchema>;
