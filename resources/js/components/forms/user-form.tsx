@@ -83,6 +83,7 @@ function Create({ handleCloseSheet }: ActionProps) {
                     action: { label: 'OK', onClick: () => {} },
                 });
                 handleCloseSheet();
+                form.reset();
             },
         };
 
