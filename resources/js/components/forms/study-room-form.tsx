@@ -1,5 +1,5 @@
 import { studyRoomSchema, StudyRoomSchemaType } from '@/lib/form-schema';
-import { ClassRoomWithMajor, StudyRoomWithClassRoomAndTeacher, User } from '@/types';
+import { ClassRoomWithMajor, LearningSubject, StudyRoomWithClassRoomAndTeacher, User } from '@/types';
 import { PageProps } from '@/types/page-props';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router, usePage } from '@inertiajs/react';
@@ -44,7 +44,11 @@ export default function StudyRoomForm({ children, type, studyRoom }: Props) {
 }
 
 function Create({ handleCloseDialog }: ActionProps) {
-    const { teachers, classRooms } = usePage().props as PageProps & { teachers: Array<User>; classRooms: Array<ClassRoomWithMajor> };
+    const { teachers, classRooms, learningSubjects } = usePage().props as PageProps & {
+        teachers: Array<User>;
+        classRooms: Array<ClassRoomWithMajor>;
+        learningSubjects: Array<LearningSubject>;
+    };
     const [isLoading, setIsLoading] = useState(false);
     const form = useForm({
         resolver: zodResolver(studyRoomSchema),
@@ -150,6 +154,30 @@ function Create({ handleCloseDialog }: ActionProps) {
                             </Field>
                         )}
                     />
+                    <Controller
+                        control={form.control}
+                        name="learning_subject_id"
+                        render={({ field, fieldState }) => (
+                            <Field data-invalid={fieldState.invalid}>
+                                <FieldLabel htmlFor={field.name}>Pilih Mapel</FieldLabel>
+                                <Select onValueChange={(val) => form.setValue('learning_subject_id', Number(val))}>
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue placeholder={'Pilih Mapel'} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            {learningSubjects.map((teacher) => (
+                                                <SelectItem key={teacher.id} value={teacher.id.toString()}>
+                                                    {teacher.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                                <FieldError errors={[fieldState.error]} />
+                            </Field>
+                        )}
+                    />
                 </FieldGroup>
                 <div className="flex justify-end gap-2">
                     <Button onClick={handleCloseDialog} type="button" variant={'outline'}>
@@ -164,13 +192,18 @@ function Create({ handleCloseDialog }: ActionProps) {
     );
 }
 function Update({ handleCloseDialog, studyRoom }: ActionProps) {
-    const { classRooms, teachers } = usePage().props as PageProps & { classRooms: Array<ClassRoomWithMajor>; teachers: Array<User> };
+    const { classRooms, teachers, learningSubjects } = usePage().props as PageProps & {
+        classRooms: Array<ClassRoomWithMajor>;
+        teachers: Array<User>;
+        learningSubjects: Array<LearningSubject>;
+    };
     const [isLoading, setIsLoading] = useState(false);
     const form = useForm({
         resolver: zodResolver(studyRoomSchema),
         defaultValues: {
             classroom_id: studyRoom?.classroom_id || 0,
             teacher_id: studyRoom?.teacher_id || 0,
+            learning_subject_id: studyRoom?.learning_subject_id || 0,
         },
     });
 
@@ -275,6 +308,35 @@ function Update({ handleCloseDialog, studyRoom }: ActionProps) {
                                     <SelectContent>
                                         <SelectGroup>
                                             {teachers.map((teacher) => (
+                                                <SelectItem key={teacher.id} value={teacher.id.toString()}>
+                                                    {teacher.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                                <FieldError errors={[fieldState.error]} />
+                            </Field>
+                        )}
+                    />
+                    <Controller
+                        control={form.control}
+                        name="learning_subject_id"
+                        render={({ field, fieldState }) => (
+                            <Field data-invalid={fieldState.invalid}>
+                                <FieldLabel htmlFor={field.name}>Pilih Mapel</FieldLabel>
+                                <Select
+                                    defaultValue={Number(field.value).toString()}
+                                    onValueChange={(val) => form.setValue('learning_subject_id', Number(val))}
+                                >
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue
+                                            placeholder={learningSubjects.find((subject) => subject.id === field.value)?.name || 'Pilih Mapel'}
+                                        />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            {learningSubjects.map((teacher) => (
                                                 <SelectItem key={teacher.id} value={teacher.id.toString()}>
                                                     {teacher.name}
                                                 </SelectItem>
