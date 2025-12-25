@@ -1,4 +1,4 @@
-import { ClassRoomWithMajor, StudyRoomWithClassRoomAndTeacher } from '@/types';
+import { ClassRoomWithMajor, StudyRoomWithClassRoomAndTeacherAndLearningSubject } from '@/types';
 import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
 import { Edit, ScanEye, Trash } from 'lucide-react';
@@ -8,7 +8,7 @@ import { CardContent } from '../ui/card';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
 interface Props {
-    studyRooms: Array<StudyRoomWithClassRoomAndTeacher>;
+    studyRooms: Array<StudyRoomWithClassRoomAndTeacherAndLearningSubject>;
 }
 
 const StudyRoomTable = ({ studyRooms }: Props) => {
@@ -26,6 +26,7 @@ const StudyRoomTable = ({ studyRooms }: Props) => {
                             <TableHead>No</TableHead>
                             <TableHead>Kelas</TableHead>
                             <TableHead>Guru</TableHead>
+                            <TableHead>Mapel</TableHead>
                             <TableHead className="text-center">Action</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -37,6 +38,7 @@ const StudyRoomTable = ({ studyRooms }: Props) => {
                                     <TableCell className="font-medium">{index + 1}</TableCell>
                                     <TableCell>{`${classRoom?.grade} ${classRoom?.major.name}`}</TableCell>
                                     <TableCell>{studyRoom.teacher.name}</TableCell>
+                                    <TableCell>{studyRoom.learning_subject.name}</TableCell>
                                     <TableCell>
                                         <div className="flex items-center justify-center gap-2">
                                             <Button variant={'destructive'} asChild>
