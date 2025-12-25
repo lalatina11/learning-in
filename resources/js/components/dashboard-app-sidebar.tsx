@@ -9,7 +9,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { User as UserType } from '@/types';
+import { SidebarMenuNavigationItem, User as UserType } from '@/types';
 import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
 import { ChevronUp, LayoutDashboard, School, User, User2 } from 'lucide-react';
@@ -34,9 +34,12 @@ const getSidebarMenuByUserRole = (role: UserType['role']) => {
                 url: '/dashboard/admin/school',
                 icon: School,
             },
-        ];
+        ] satisfies Array<SidebarMenuNavigationItem>;
     }
-    return [];
+    if (role === 'TEACHER') {
+        return [{ title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard/teacher' }] satisfies Array<SidebarMenuNavigationItem>;
+    }
+    return [{ title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' }] satisfies Array<SidebarMenuNavigationItem>;
 };
 
 const DashboardAppSidebar = () => {
