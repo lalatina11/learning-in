@@ -8,6 +8,7 @@ use App\Models\Major;
 use App\Models\StudyRoom;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class AdminDashboardController extends Controller
@@ -118,7 +119,7 @@ class AdminDashboardController extends Controller
         $majors = Major::all();
         $classRooms = ClassRoom::with('major')->get();
         $teachers = User::where('role', "TEACHER")->get();
-        $studyRooms = StudyRoom::with('teacher')->with('classroom')->get();
+        $studyRooms = StudyRoom::with('teacher')->with('classroom')->with('learning_subject')->get();
         $learningSubjects = LearningSubject::get();
         return Inertia::render('dashboard/admin/school', compact('majors', 'classRooms', 'teachers', 'studyRooms', 'learningSubjects'));
     }
@@ -247,8 +248,9 @@ class AdminDashboardController extends Controller
     public function createStudyRoom(Request $request)
     {
         $validated = $request->validate([
-            'classroom_id' => "int|min:1",
-            'teacher_id' => "int|min:1"
+            'classroom_id' => "required|int|min:1",
+            'teacher_id' => "required|int|min:1",
+            'learning_subject_id' => 'required|int|min:1'
         ]);
 
         $existingClassRoom = ClassRoom::findOrFail($validated["classroom_id"]);
@@ -261,6 +263,12 @@ class AdminDashboardController extends Controller
 
         if (!$existingTeacher) {
             return redirect()->back()->withErrors('Guru tidak valid!', 'server');
+        }
+
+        $existingLearningSubject = LearningSubject::findOrFail($validated['learning_subject_id']);
+
+        if (!$existingLearningSubject) {
+            return redirect()->back()->withErrors('Mapel tidak valid!', 'server');
         }
 
         StudyRoom::create($validated);
@@ -387,6 +395,32 @@ class AdminDashboardController extends Controller
         }
 
         $existingLearningSubject->delete();
+
+        return redirect()->back();
+    }
+
+    public function addStudentOnStudyRoom($id, Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => "required|number|min:1"
+        ]);
+
+        $existingStudyRoom = StudyRoom::findOrFail($id);
+
+        if (!$existingStudyRoom) {
+            return redirect()->back()->withErrors('KBM tidak valid', 'server');
+        }
+
+        $student = User::where('role', 'STUDENT')->findOrFail($validated['user_id']);
+
+        if (!$student) {
+            return redirect()->back()->withErrors('Murid tidak valid', 'server');
+        }
+
+        DB::table('student_in_the_study_room')->insert([
+            'study_room_id' => $existingStudyRoom->id,
+            'student_id' => $student->id
+        ]);
 
         return redirect()->back();
     }
