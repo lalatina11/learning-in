@@ -1,4 +1,4 @@
-import { User } from '@/types';
+import { LearningSubject, User } from '@/types';
 
 export const switchUserRoleToCapitalize = (role: User['role']) => {
     switch (role) {
@@ -10,5 +10,16 @@ export const switchUserRoleToCapitalize = (role: User['role']) => {
             return 'Student';
         default:
             return '';
+    }
+};
+
+export const switchCaseLearningTypeForIndonesianLang = (type: LearningSubject['type']) => {
+    switch (type) {
+        case 'PRACTICE':
+            return 'Praktek';
+        case 'THEORY':
+            return 'Teori';
+        default:
+            'Teori';
     }
 };
