@@ -55,7 +55,11 @@ Route::middleware(['auth.middleware'])->group(function () {
             });
         });
         Route::middleware(['teacher.middleware'])->prefix('/teacher')->group(function () {
-            Route::get('/', [TeacherDashboardController::class, 'showTeacherDashboard'])->name('dashboard.teacher');
+            Route::get('/', [TeacherDashboardController::class, 'showDashboard'])->name('dashboard.teacher');
+            Route::prefix('learning')->group(function () {
+                Route::get('/', [TeacherDashboardController::class, 'showLearningDashboard'])->name('dashboard.teacher.learning.index');
+                Route::get('/{id}', [TeacherDashboardController::class, 'showLearningDashboardDetails'])->name('dashboard.teacher.learning.details');
+            });
         });
         Route::middleware(['student.middleware'])->group(function () {
             Route::get('/', [StudentDashboardController::class, 'showStudentDashboard'])->name('dashboard.student');
