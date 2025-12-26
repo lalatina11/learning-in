@@ -14,7 +14,7 @@ class StudyRoom extends Model
     }
     public function classroom()
     {
-        return $this->belongsTo(ClassRoom::class, 'classroom_id');
+        return $this->belongsTo(ClassRoom::class, 'classroom_id')->with('major');
     }
 
     public function students()
