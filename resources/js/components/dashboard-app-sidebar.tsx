@@ -12,7 +12,7 @@ import {
 import { SidebarMenuNavigationItem, User as UserType } from '@/types';
 import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
-import { ChevronUp, LayoutDashboard, School, User, User2 } from 'lucide-react';
+import { ChevronUp, LayoutDashboard, School, School2Icon, User, User2 } from 'lucide-react';
 import LogOutForm from './forms/logout-form';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
@@ -37,7 +37,10 @@ const getSidebarMenuByUserRole = (role: UserType['role']) => {
         ] satisfies Array<SidebarMenuNavigationItem>;
     }
     if (role === 'TEACHER') {
-        return [{ title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard/teacher' }] satisfies Array<SidebarMenuNavigationItem>;
+        return [
+            { title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard/teacher' },
+            { title: 'Mengajar', icon: School2Icon, url: '/dashboard/teacher/learning' },
+        ] satisfies Array<SidebarMenuNavigationItem>;
     }
     return [{ title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' }] satisfies Array<SidebarMenuNavigationItem>;
 };
