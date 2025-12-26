@@ -1,4 +1,6 @@
-import { User } from '@/types';
+import { Auth, User } from '@/types';
+import { PageProps as DefaultPageProps } from '@/types/page-props';
+import { usePage } from '@inertiajs/react';
 import { SwitchCamera, Trash } from 'lucide-react';
 import StudentInTheStudyRoomForm from '../forms/student-in-the-study-room-form';
 import { Button } from '../ui/button';
@@ -10,7 +12,15 @@ interface Props {
     studyRoomId: number;
 }
 
+interface PageProps extends DefaultPageProps {
+    auth: Auth;
+}
+
 const StudentTable = ({ users, studyRoomId }: Props) => {
+    const { auth } = usePage().props as PageProps;
+
+    const isAdmin = auth.user.role === 'ADMIN';
+
     return (
         <Card>
             <CardContent>
@@ -22,7 +32,7 @@ const StudentTable = ({ users, studyRoomId }: Props) => {
                             <TableHead>NIK/NIM</TableHead>
                             <TableHead>Nama</TableHead>
                             <TableHead>E-Mail</TableHead>
-                            <TableHead>Aksi</TableHead>
+                            {isAdmin && <TableHead>Aksi</TableHead>}
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -32,22 +42,24 @@ const StudentTable = ({ users, studyRoomId }: Props) => {
                                 <TableCell>{user.master_number}</TableCell>
                                 <TableCell>{user.name}</TableCell>
                                 <TableCell>{user.email}</TableCell>
-                                <TableCell>
-                                    <div className="flex items-center gap-2">
-                                        <StudentInTheStudyRoomForm type="update" studyRoomId={studyRoomId} user={user}>
-                                            <Button>
-                                                <SwitchCamera />
-                                                <span className="hidden md:inline">Ganti</span>
-                                            </Button>
-                                        </StudentInTheStudyRoomForm>
-                                        <StudentInTheStudyRoomForm type="delete" studyRoomId={studyRoomId} user={user}>
-                                            <Button variant={'destructive'}>
-                                                <Trash />
-                                                <span className="hidden md:block">Hapus</span>
-                                            </Button>
-                                        </StudentInTheStudyRoomForm>
-                                    </div>
-                                </TableCell>
+                                {isAdmin && (
+                                    <TableCell>
+                                        <div className="flex items-center gap-2">
+                                            <StudentInTheStudyRoomForm type="update" studyRoomId={studyRoomId} user={user}>
+                                                <Button>
+                                                    <SwitchCamera />
+                                                    <span className="hidden md:inline">Ganti</span>
+                                                </Button>
+                                            </StudentInTheStudyRoomForm>
+                                            <StudentInTheStudyRoomForm type="delete" studyRoomId={studyRoomId} user={user}>
+                                                <Button variant={'destructive'}>
+                                                    <Trash />
+                                                    <span className="hidden md:block">Hapus</span>
+                                                </Button>
+                                            </StudentInTheStudyRoomForm>
+                                        </div>
+                                    </TableCell>
+                                )}
                             </TableRow>
                         ))}
                     </TableBody>
