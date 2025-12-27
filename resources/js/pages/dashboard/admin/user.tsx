@@ -11,8 +11,8 @@ interface Props {
 
 const AdminUserManagementDashboard = ({ users }: Props) => {
     const usersItem = [
-        { title: 'Data Guru', users: users.filter((user) => user.role !== 'TEACHER') },
-        { title: 'Data Siswa', users: users.filter((user) => user.role !== 'STUDENT') },
+        { title: 'Data Siswa', users: users.filter((user) => user.role === 'STUDENT') },
+        { title: 'Data Guru', users: users.filter((user) => user.role === 'TEACHER') },
     ];
 
     return (
@@ -29,7 +29,7 @@ const AdminUserManagementDashboard = ({ users }: Props) => {
                 <section key={item.title} className="flex flex-col gap-3">
                     <div className="flex items-center gap-2">
                         <User />
-                        <h1>Data Siswa</h1>
+                        <h1>{item.title}</h1>
                     </div>
                     <UserTable users={item.users} />
                 </section>
