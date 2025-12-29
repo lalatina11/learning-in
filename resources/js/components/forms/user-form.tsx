@@ -164,7 +164,7 @@ function Create({ handleCloseSheet }: ActionProps) {
                                             </InputGroupButton>
                                         </InputGroupAddon>
                                     </InputGroup>
-                                    <FieldDescription>Password Optional</FieldDescription>
+                                    <FieldDescription>Password Wajib diisi minimal 8 karakter</FieldDescription>
                                     <FieldError errors={[fieldState.error]} />
                                 </Field>
                             )}
@@ -318,7 +318,7 @@ function Update({ user, handleCloseSheet }: ActionProps) {
                                             </InputGroupButton>
                                         </InputGroupAddon>
                                     </InputGroup>
-                                    <FieldDescription>Password Optional</FieldDescription>
+                                    <FieldDescription>Password Opsional</FieldDescription>
                                     <FieldError errors={[fieldState.error]} />
                                 </Field>
                             )}
