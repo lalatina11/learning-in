@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ClassRoom extends Model
 {
+    use HasFactory;
     protected $fillable = ['grade', 'major_id'];
 
     protected $casts = ['grade' => 'string'];
