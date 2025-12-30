@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->text('description');
             $table->text('url');
             $table->text('storage_url');
-            $table->boolean('is_closed')->default(false);
             $table->timestamps();
         });
     }
