@@ -55,3 +55,19 @@ export const studentInTheStudyRoomSchema = z.object({
 });
 
 export type StudentInTheStudyRoomSchemaType = z.infer<typeof studentInTheStudyRoomSchema>;
+
+const allowedModuleFileFormat = [
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/pdf',
+];
+
+export const learningModuleSchema = z.object({
+    description: z.string().min(3, 'Minimal 3 karakter'),
+    module: z
+        .file()
+        .refine((file) => allowedModuleFileFormat.includes(file.type), 'Hanya bisa upload file docx, pptx, dan PDF')
+        .optional(),
+});
+
+export type LearningModuleSchemaType = z.infer<typeof learningModuleSchema>;
