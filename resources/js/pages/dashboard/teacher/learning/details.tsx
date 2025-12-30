@@ -1,14 +1,18 @@
 import StudentTable from '@/components/admin-components/student-table';
 import DashboardPageContainer from '@/components/containers/dashboard-page-container';
+import LearningModuleForm from '@/components/forms/learning-module-form';
+import LearningModulTable from '@/components/teacher-components/learning-modules-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
+import { LearningModule, StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
 import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
-import { ArrowLeft, Eye, EyeOff, Feather, Plus } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Plus } from 'lucide-react';
 import { useState } from 'react';
 
-type StudyRoom = StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents;
+export interface StudyRoom extends StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents {
+    learning_modules: Array<LearningModule>;
+}
 
 interface Props extends PageProps {
     studyRoom: StudyRoom;
@@ -16,6 +20,8 @@ interface Props extends PageProps {
 
 const Details = () => {
     const { studyRoom } = usePage().props as Props;
+    console.log(studyRoom);
+
     const [isShowStudentsTable, setIsShowStudentsTable] = useState(false);
 
     const handleSwitchStudentTableVisibility = () => {
@@ -76,25 +82,24 @@ const Details = () => {
                                 <StudentTable users={studyRoom.students} studyRoomId={studyRoom.id} />
                             </div>
                         )}
-                        <div className="mt-3 flex flex-col gap-3">
-                            <h1 className="text-lg font-semibold">Penugasan</h1>
-                            <div className="flex items-center gap-2">
+                    </CardContent>
+                </Card>
+                <div>
+                    <div className="mt-3 flex flex-col gap-3">
+                        <h1 className="text-lg font-semibold">Materi KBM</h1>
+                        <div className="flex items-center gap-2">
+                            <LearningModuleForm type="create" studyRoomId={studyRoom.id}>
                                 <Button>
                                     <Plus />
                                     <span>
-                                        <span className="hidden sm:inline">Tambah</span> Tugas
+                                        <span className="hidden sm:inline">Tambah</span> Materi
                                     </span>
                                 </Button>
-                                <Button>
-                                    <Feather />
-                                    <span>
-                                        <span className="hidden sm:inline">Tambah</span> Quiz
-                                    </span>
-                                </Button>
-                            </div>
+                            </LearningModuleForm>
                         </div>
-                    </CardContent>
-                </Card>
+                        <LearningModulTable />
+                    </div>
+                </div>
             </div>
         </DashboardPageContainer>
     );
