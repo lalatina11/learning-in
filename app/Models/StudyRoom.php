@@ -31,4 +31,9 @@ class StudyRoom extends Model
     {
         return $this->belongsTo(LearningSubject::class, 'learning_subject_id');
     }
+
+    public function learning_modules()
+    {
+        return $this->hasMany(LearningModule::class);
+    }
 }
