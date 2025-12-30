@@ -36,4 +36,8 @@ class StudyRoom extends Model
     {
         return $this->hasMany(LearningModule::class);
     }
+    public function tasks()
+    {
+        return $this->hasMany(StudyRoomTask::class);
+    }
 }
