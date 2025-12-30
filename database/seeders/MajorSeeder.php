@@ -14,8 +14,8 @@ class MajorSeeder extends Seeder
     public function run(): void
     {
         Major::factory()->count(5)->sequence(
-            ['name' => "Farmasi"],
             ['name' => "Rekayasa Perangkat Lunak"],
+            ['name' => "Farmasi"],
             ['name' => "Teknik Komputer Jaringan"],
             ['name' => "Design Visual dan Komunikasi"],
             ['name' => "Akuntansi"],
