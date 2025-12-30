@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->count(3)->sequence(
+        User::factory()->count(13)->sequence(
             [
                 'role' => 'ADMIN',
                 'email' => 'admin@admin.com',
@@ -24,8 +24,48 @@ class UserSeeder extends Seeder
                 'email' => 'teacher@teacher.com'
             ],
             [
+                'role' => 'TEACHER',
+                'email' => 'teacher1@teacher.com'
+            ],
+            [
+                'role' => 'TEACHER',
+                'email' => 'teacher2@teacher.com'
+            ],
+            [
+                'role' => 'TEACHER',
+                'email' => 'teacher3@teacher.com'
+            ],
+            [
+                'role' => 'TEACHER',
+                'email' => 'teacher5@teacher.com'
+            ],
+            [
+                'role' => 'TEACHER',
+                'email' => 'teacher4@teacher.com'
+            ],
+            [
                 'role' => 'STUDENT',
                 'email' => 'student@student.com'
+            ],
+            [
+                'role' => 'STUDENT',
+                'email' => 'student1@student.com'
+            ],
+            [
+                'role' => 'STUDENT',
+                'email' => 'student2@student.com'
+            ],
+            [
+                'role' => 'STUDENT',
+                'email' => 'student3@student.com'
+            ],
+            [
+                'role' => 'STUDENT',
+                'email' => 'student4@student.com'
+            ],
+            [
+                'role' => 'STUDENT',
+                'email' => 'student5@student.com'
             ],
         )->create();
     }
