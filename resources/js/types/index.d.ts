@@ -103,3 +103,9 @@ export interface SidebarMenuNavigationItem {
     url: string;
     icon: ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>>;
 }
+
+interface LearningModule extends TimeStamp {
+    id: number;
+    description: string;
+    url: string;
+}
