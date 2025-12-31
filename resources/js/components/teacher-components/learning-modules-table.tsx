@@ -1,4 +1,4 @@
-import { Auth, LearningModule, StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
+import { Auth, StudyRoomModule, StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
 import { PageProps } from '@/types/page-props';
 import { usePage } from '@inertiajs/react';
 import { Copy, Edit, Trash } from 'lucide-react';
@@ -8,7 +8,7 @@ import { Button } from '../ui/button';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
 export interface StudyRoom extends StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents {
-    learning_modules: Array<LearningModule>;
+    learning_modules: Array<StudyRoomModule>;
 }
 
 const LearningModulTable = () => {

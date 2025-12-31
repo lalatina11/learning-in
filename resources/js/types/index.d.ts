@@ -104,8 +104,15 @@ export interface SidebarMenuNavigationItem {
     icon: ForwardRefExoticComponent<Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>>;
 }
 
-interface LearningModule extends TimeStamp {
+interface StudyRoomModule extends TimeStamp {
     id: number;
     description: string;
     url: string;
+}
+
+interface StudyRoomTask extends TimeStamp {
+    id: number;
+    description: string;
+    url: string;
+    is_closed: boolean;
 }

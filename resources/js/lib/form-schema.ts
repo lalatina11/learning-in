@@ -56,18 +56,30 @@ export const studentInTheStudyRoomSchema = z.object({
 
 export type StudentInTheStudyRoomSchemaType = z.infer<typeof studentInTheStudyRoomSchema>;
 
-const allowedModuleFileFormat = [
+const allowedstudyRoomModuleFileFormat = [
     'application/vnd.openxmlformats-officedocument.presentationml.presentation',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/pdf',
 ];
 
-export const learningModuleSchema = z.object({
+export const studyRoomModuleSchema = z.object({
     description: z.string().min(3, 'Minimal 3 karakter'),
     module: z
         .file()
-        .refine((file) => allowedModuleFileFormat.includes(file.type), 'Hanya bisa upload file docx, pptx, dan PDF')
+        .refine((file) => allowedstudyRoomModuleFileFormat.includes(file.type), 'Hanya bisa upload file docx, pptx, dan PDF')
         .optional(),
 });
 
-export type LearningModuleSchemaType = z.infer<typeof learningModuleSchema>;
+export type StudyRoomModuleSchemaType = z.infer<typeof studyRoomModuleSchema>;
+
+const allowedStudyRoomTaskFileFormat = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf'];
+
+export const studyRoomTaskSchema = z.object({
+    description: z.string().min(3, 'Minimal 3 karakter'),
+    module: z
+        .file()
+        .refine((file) => allowedStudyRoomTaskFileFormat.includes(file.type), 'Hanya bisa upload file docx, dan PDF')
+        .optional(),
+});
+
+export type StudyRoomTaskSchemaType = z.infer<typeof studyRoomTaskSchema>;

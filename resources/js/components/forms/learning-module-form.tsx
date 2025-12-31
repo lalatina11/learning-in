@@ -1,5 +1,5 @@
-import { learningModuleSchema, LearningModuleSchemaType } from '@/lib/form-schema';
-import { LearningModule } from '@/types';
+import { studyRoomModuleSchema, type StudyRoomModuleSchemaType } from '@/lib/form-schema';
+import { StudyRoomModule } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from '@inertiajs/react';
 import { ChangeEvent, ReactNode, useState } from 'react';
@@ -15,13 +15,13 @@ interface Props {
     children: ReactNode;
     type: 'create' | 'update' | 'delete';
     studyRoomId?: number;
-    learningModule?: LearningModule;
+    learningModule?: StudyRoomModule;
 }
 
 interface ActionProps {
     handleCloseDialog: () => void;
     studyRoomId?: number;
-    learningModule?: LearningModule;
+    learningModule?: StudyRoomModule;
 }
 
 export default function LearningModuleForm({ children, type, studyRoomId, learningModule }: Props) {
@@ -48,7 +48,7 @@ export default function LearningModuleForm({ children, type, studyRoomId, learni
 function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
     const [isLoading, setIsLoading] = useState(false);
     const form = useForm({
-        resolver: zodResolver(learningModuleSchema),
+        resolver: zodResolver(studyRoomModuleSchema),
         defaultValues: { description: '', module: undefined },
     });
 
@@ -57,7 +57,7 @@ function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
         form.setValue('module', file);
     }
 
-    function onSubmit(values: LearningModuleSchemaType) {
+    function onSubmit(values: StudyRoomModuleSchemaType) {
         const requestOptions = {
             onStart: () => setIsLoading(true),
             onFinish: () => setIsLoading(false),
@@ -133,7 +133,7 @@ function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
 function Update({ handleCloseDialog, learningModule }: ActionProps) {
     const [isLoading, setIsLoading] = useState(false);
     const form = useForm({
-        resolver: zodResolver(learningModuleSchema),
+        resolver: zodResolver(studyRoomModuleSchema),
         defaultValues: { description: learningModule?.description || '', module: undefined },
     });
 
@@ -142,7 +142,7 @@ function Update({ handleCloseDialog, learningModule }: ActionProps) {
         form.setValue('module', file);
     }
 
-    function onSubmit(values: LearningModuleSchemaType) {
+    function onSubmit(values: StudyRoomModuleSchemaType) {
         const requestOptions = {
             onStart: () => setIsLoading(true),
             onFinish: () => setIsLoading(false),

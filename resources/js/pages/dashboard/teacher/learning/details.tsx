@@ -100,6 +100,22 @@ const Details = () => {
                         <LearningModulTable />
                     </div>
                 </div>
+                <div>
+                    <div className="mt-3 flex flex-col gap-3">
+                        <h1 className="text-lg font-semibold">Data Penugasan</h1>
+                        <div className="flex items-center gap-2">
+                            <LearningModuleForm type="create" studyRoomId={studyRoom.id}>
+                                <Button>
+                                    <Plus />
+                                    <span>
+                                        <span className="hidden sm:inline">Tambah</span> Materi
+                                    </span>
+                                </Button>
+                            </LearningModuleForm>
+                        </div>
+                        <LearningModulTable />
+                    </div>
+                </div>
             </div>
         </DashboardPageContainer>
     );
