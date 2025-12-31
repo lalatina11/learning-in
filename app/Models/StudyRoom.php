@@ -32,7 +32,7 @@ class StudyRoom extends Model
         return $this->belongsTo(LearningSubject::class, 'learning_subject_id');
     }
 
-    public function learning_modules()
+    public function modules()
     {
         return $this->hasMany(StudyRoomModule::class);
     }
