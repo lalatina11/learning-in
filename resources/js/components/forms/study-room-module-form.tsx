@@ -15,16 +15,16 @@ interface Props {
     children: ReactNode;
     type: 'create' | 'update' | 'delete';
     studyRoomId?: number;
-    learningModule?: StudyRoomModule;
+    module?: StudyRoomModule;
 }
 
 interface ActionProps {
     handleCloseDialog: () => void;
     studyRoomId?: number;
-    learningModule?: StudyRoomModule;
+    module?: StudyRoomModule;
 }
 
-export default function StudyRoomModuleForm({ children, type, studyRoomId, learningModule }: Props) {
+export default function StudyRoomModuleForm({ children, type, studyRoomId, module }: Props) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     function handleCloseDialog() {
@@ -37,9 +37,9 @@ export default function StudyRoomModuleForm({ children, type, studyRoomId, learn
             {type === 'create' ? (
                 <Create handleCloseDialog={handleCloseDialog} studyRoomId={studyRoomId} />
             ) : type === 'update' ? (
-                <Update handleCloseDialog={handleCloseDialog} learningModule={learningModule} />
+                <Update handleCloseDialog={handleCloseDialog} module={module} />
             ) : (
-                <Delete handleCloseDialog={handleCloseDialog} learningModule={learningModule} />
+                <Delete handleCloseDialog={handleCloseDialog} module={module} />
             )}
         </Dialog>
     );
@@ -78,7 +78,7 @@ function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
                 handleCloseDialog();
             },
         };
-        router.post(`/dashboard/teacher/learning/${studyRoomId}/create-learning-module`, values, requestOptions);
+        router.post(`/dashboard/teacher/learning/modules/${studyRoomId}/create-learning-module`, values, requestOptions);
     }
 
     const isFormBusy = isLoading || form.formState.isLoading || form.formState.isSubmitting;
@@ -130,11 +130,11 @@ function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
     );
 }
 
-function Update({ handleCloseDialog, learningModule }: ActionProps) {
+function Update({ handleCloseDialog, module }: ActionProps) {
     const [isLoading, setIsLoading] = useState(false);
     const form = useForm({
         resolver: zodResolver(studyRoomModuleSchema),
-        defaultValues: { description: learningModule?.description || '', module: undefined },
+        defaultValues: { description: module?.description || '', module: undefined },
     });
 
     function handleChangeInputModuleFile(e: ChangeEvent<HTMLInputElement>) {
@@ -165,7 +165,7 @@ function Update({ handleCloseDialog, learningModule }: ActionProps) {
                 handleCloseDialog();
             },
         };
-        router.patch(`/dashboard/teacher/learning/${learningModule?.id}/update-learning-module`, values, requestOptions);
+        router.patch(`/dashboard/teacher/learning/modules/${module?.id}/update-learning-module`, values, requestOptions);
     }
 
     const isFormBusy = isLoading || form.formState.isLoading || form.formState.isSubmitting;
@@ -184,7 +184,7 @@ function Update({ handleCloseDialog, learningModule }: ActionProps) {
                         render={({ field, fieldState }) => (
                             <Field data-invalid={fieldState.invalid}>
                                 <FieldLabel htmlFor={field.name}>Deksripsi</FieldLabel>
-                                <Textarea {...field} id={field.name} defaultValue={learningModule?.description} />
+                                <Textarea {...field} id={field.name} defaultValue={module?.description} />
                                 <FieldError errors={[fieldState.error]} />
                             </Field>
                         )}
@@ -215,7 +215,7 @@ function Update({ handleCloseDialog, learningModule }: ActionProps) {
     );
 }
 
-function Delete({ learningModule, handleCloseDialog }: ActionProps) {
+function Delete({ module, handleCloseDialog }: ActionProps) {
     const [isLoading, setIsLoading] = useState(false);
 
     function handleDelete() {
@@ -239,7 +239,7 @@ function Delete({ learningModule, handleCloseDialog }: ActionProps) {
                 handleCloseDialog();
             },
         };
-        router.delete(`/dashboard/teacher/learning/${learningModule?.id}/delete-learning-module`, requestOptions);
+        router.delete(`/dashboard/teacher/learning/modules/${module?.id}/delete-learning-module`, requestOptions);
     }
 
     const isButtonBusy = isLoading;

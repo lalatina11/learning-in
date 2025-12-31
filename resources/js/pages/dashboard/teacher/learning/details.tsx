@@ -1,7 +1,7 @@
 import StudentTable from '@/components/admin-components/student-table';
 import DashboardPageContainer from '@/components/containers/dashboard-page-container';
 import StudyRoomModuleForm from '@/components/forms/study-room-module-form';
-import LearningModulTable from '@/components/teacher-components/learning-modules-table';
+import StudyRoomModuleTable from '@/components/teacher-components/study-room-module-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { StudyRoomModule, StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
@@ -11,7 +11,7 @@ import { ArrowLeft, Eye, EyeOff, Plus } from 'lucide-react';
 import { useState } from 'react';
 
 export interface StudyRoom extends StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents {
-    learning_modules: Array<StudyRoomModule>;
+    modules: Array<StudyRoomModule>;
 }
 
 interface Props extends PageProps {
@@ -97,7 +97,7 @@ const Details = () => {
                                 </Button>
                             </StudyRoomModuleForm>
                         </div>
-                        <LearningModulTable />
+                        <StudyRoomModuleTable />
                     </div>
                 </div>
                 <div>
@@ -113,7 +113,7 @@ const Details = () => {
                                 </Button>
                             </StudyRoomModuleForm>
                         </div>
-                        <LearningModulTable />
+                        <StudyRoomModuleTable />
                     </div>
                 </div>
             </div>

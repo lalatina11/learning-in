@@ -8,13 +8,13 @@ import { Button } from '../ui/button';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
 export interface StudyRoom extends StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents {
-    learning_modules: Array<StudyRoomModule>;
+    modules: Array<StudyRoomModule>;
 }
 
-const LearningModulTable = () => {
+const StudyRoomModuleTable = () => {
     const { studyRoom, auth } = usePage().props as PageProps & { studyRoom: StudyRoom; auth: Auth };
 
-    const { learning_modules } = studyRoom;
+    const { modules } = studyRoom;
 
     return (
         <Table className="w-full">
@@ -28,31 +28,31 @@ const LearningModulTable = () => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {learning_modules.map((learningModule, index) => (
-                    <TableRow key={learningModule.id}>
+                {modules.map((module, index) => (
+                    <TableRow key={module.id}>
                         <TableCell className="font-medium">{index + 1}</TableCell>
-                        <TableCell>{learningModule.description}</TableCell>
+                        <TableCell>{module.description}</TableCell>
                         <TableCell>
-                            <span className="max-w-[300px] truncate">{learningModule.url.slice(37)}</span>
+                            <span className="max-w-[300px] truncate">{module.url.slice(37)}</span>
                         </TableCell>
                         <TableCell>
                             <div className="flex items-center gap-2">
                                 <Button
                                     onClick={() => {
-                                        navigator.clipboard.writeText(learningModule.url);
+                                        navigator.clipboard.writeText(module.url);
                                         toast.success('URL Modul Pembelajaran berhasil di copy!');
                                     }}
                                 >
                                     <Copy />
                                     <span className="hidden md:inline">Copy Url</span>
                                 </Button>
-                                <StudyRoomModuleForm type="update" learningModule={learningModule}>
+                                <StudyRoomModuleForm type="update" module={module}>
                                     <Button>
                                         <Edit />
                                         <span className="hidden md:inline">Edit</span>
                                     </Button>
                                 </StudyRoomModuleForm>
-                                <StudyRoomModuleForm type="delete" learningModule={learningModule}>
+                                <StudyRoomModuleForm type="delete" module={module}>
                                     <Button variant={'destructive'}>
                                         <Trash />
                                         <span className="hidden md:inline">Hapus</span>
@@ -67,4 +67,4 @@ const LearningModulTable = () => {
     );
 };
 
-export default LearningModulTable;
+export default StudyRoomModuleTable;
