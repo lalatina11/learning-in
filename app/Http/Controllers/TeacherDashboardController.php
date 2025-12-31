@@ -26,7 +26,7 @@ class TeacherDashboardController extends Controller
         return Inertia::render("dashboard/teacher/learning/details", compact("studyRoom"));
     }
 
-    public function createLearningModule($studyRoomid, Request $request)
+    public function createStudyRoomModule($studyRoomid, Request $request)
     {
         $validated = $request->validate([
             'description' => 'string|min:3'
@@ -47,7 +47,7 @@ class TeacherDashboardController extends Controller
             if (!in_array($file->getClientOriginalExtension(), $allowedModuleMimeType)) {
                 return redirect()->back()->withErrors("Hanya bisa menerima file PPT, PDF, atau Word", "server");
             }
-            $storageUrl = $file->store("learning_modules", 'public');
+            $storageUrl = $file->store("study_room_modules", 'public');
             $url = asset(Storage::url($storageUrl));
             $validated['storage_url'] = $storageUrl;
             $validated['url'] = $url;
@@ -57,7 +57,7 @@ class TeacherDashboardController extends Controller
         return redirect()->back()->withErrors("Mohon upload module!", "server");
 
     }
-    public function updateLearningModule($id, Request $request)
+    public function updateStudyRoomModule($id, Request $request)
     {
         $validated = $request->validate([
             'description' => 'string|min:3'
@@ -79,7 +79,7 @@ class TeacherDashboardController extends Controller
             }
             Storage::disk('public')->delete($learningModule->storage_url);
             $file = $request->file("module");
-            $storageUrl = $file->store("learning_modules", 'public');
+            $storageUrl = $file->store("study_room_modules", 'public');
             $url = asset(Storage::url($storageUrl));
             $validated['storage_url'] = $storageUrl;
             $validated['url'] = $url;
@@ -90,7 +90,7 @@ class TeacherDashboardController extends Controller
         $learningModule->update($validated);
         return redirect()->back();
     }
-    public function deleteLearningModule($id)
+    public function deleteStudyRoomModule($id)
     {
         $learningModule = StudyRoomModule::findOrFail($id);
 
@@ -121,7 +121,7 @@ class TeacherDashboardController extends Controller
             if (!in_array($file->getClientOriginalExtension(), $allowedModuleMimeType)) {
                 return redirect()->back()->withErrors("Hanya bisa menerima file PDF, atau Word", "server");
             }
-            $storageUrl = $file->store("task_storage_url", 'public');
+            $storageUrl = $file->store("study_room_tasks", 'public');
             $url = asset(Storage::url($storageUrl));
             $validated['task_storage_url'] = $storageUrl;
             $validated['url'] = $url;
@@ -153,7 +153,7 @@ class TeacherDashboardController extends Controller
             }
             Storage::disk('public')->delete($studyRoomTask->storage_url);
             $file = $request->file("module");
-            $storageUrl = $file->store("task_storage_url", 'public');
+            $storageUrl = $file->store("study_room_tasks", 'public');
             $url = asset(Storage::url($storageUrl));
             $validated['storage_url'] = $storageUrl;
             $validated['url'] = $url;

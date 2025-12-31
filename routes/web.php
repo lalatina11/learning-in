@@ -59,9 +59,16 @@ Route::middleware(['auth.middleware'])->group(function () {
             Route::prefix('learning')->group(function () {
                 Route::get('/', [TeacherDashboardController::class, 'showLearningDashboard'])->name('dashboard.teacher.learning.index');
                 Route::get('/{id}', [TeacherDashboardController::class, 'showLearningDashboardDetails'])->name('dashboard.teacher.learning.details');
-                Route::post('/{id}/create-learning-module', [TeacherDashboardController::class, 'createLearningModule'])->name('dashboard.teacher.learning.details.create-learning-module');
-                Route::patch('/{id}/update-learning-module', [TeacherDashboardController::class, 'updateLearningModule'])->name('dashboard.teacher.learning.update-learning-module');
-                Route::delete('/{id}/delete-learning-module', [TeacherDashboardController::class, 'deleteLearningModule'])->name('dashboard.teacher.learning.delete-learning-module');
+                Route::prefix('-module')->group(function () {
+                    Route::post('/{id}/create-learning-module', [TeacherDashboardController::class, 'createLearningModule'])->name('dashboard.teacher.learning.details.create-learning-module');
+                    Route::patch('/{id}/update-learning-module', [TeacherDashboardController::class, 'updateLearningModule'])->name('dashboard.teacher.learning.update-learning-module');
+                    Route::delete('/{id}/delete-learning-module', [TeacherDashboardController::class, 'deleteLearningModule'])->name('dashboard.teacher.learning.delete-learning-module');
+                });
+                Route::prefix('-task')->group(function () {
+                    Route::post('/{id}/create-study-room-module', [TeacherDashboardController::class, 'createStudyRoomModule'])->name('dashboard.teacher.learning.details.create-study-room-module');
+                    Route::patch('/{id}/update-study-room-module', [TeacherDashboardController::class, 'updateStudyRoomModule'])->name('dashboard.teacher.learning.update-study-room-module');
+                    Route::delete('/{id}/delete-study-room-module', [TeacherDashboardController::class, 'deleteStudyRoomModule'])->name('dashboard.teacher.learning.delete-study-room-module');
+                });
             });
         });
         Route::middleware(['student.middleware'])->group(function () {
