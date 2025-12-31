@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LearningModule;
 use App\Models\StudyRoom;
+use App\Models\StudyRoomModule;
+use App\Models\StudyRoomTask;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -50,7 +51,7 @@ class TeacherDashboardController extends Controller
             $url = asset(Storage::url($storageUrl));
             $validated['storage_url'] = $storageUrl;
             $validated['url'] = $url;
-            LearningModule::create($validated);
+            StudyRoomModule::create($validated);
             return redirect()->back();
         }
         return redirect()->back()->withErrors("Mohon upload module!", "server");
@@ -62,7 +63,7 @@ class TeacherDashboardController extends Controller
             'description' => 'string|min:3'
         ]);
 
-        $learningModule = LearningModule::findOrFail($id);
+        $learningModule = StudyRoomModule::findOrFail($id);
 
         if (!$learningModule) {
             return redirect()->back()->withErrors("Modul tidak ditemukan!", "server");
@@ -91,7 +92,81 @@ class TeacherDashboardController extends Controller
     }
     public function deleteLearningModule($id)
     {
-        $learningModule = LearningModule::findOrFail($id);
+        $learningModule = StudyRoomModule::findOrFail($id);
+
+
+        $learningModule->delete();
+
+        return redirect()->back();
+    }
+
+    public function createStudyRoomTask($studyRoomid, Request $request)
+    {
+        $validated = $request->validate([
+            'description' => 'string|min:3'
+        ]);
+
+        $studyRoom = StudyRoom::findOrFail($studyRoomid);
+
+        if (!$studyRoom) {
+            return redirect()->back()->withErrors("KBM tidak valid!", "server");
+        }
+
+        $validated['study_room_id'] = $studyRoom->id;
+
+        $allowedModuleMimeType = ['docx', 'pdf'];
+
+        if ($request->hasFile("task")) {
+            $file = $request->file("task");
+            if (!in_array($file->getClientOriginalExtension(), $allowedModuleMimeType)) {
+                return redirect()->back()->withErrors("Hanya bisa menerima file PDF, atau Word", "server");
+            }
+            $storageUrl = $file->store("task_storage_url", 'public');
+            $url = asset(Storage::url($storageUrl));
+            $validated['task_storage_url'] = $storageUrl;
+            $validated['url'] = $url;
+            StudyRoomTask::create($validated);
+            return redirect()->back();
+        }
+        return redirect()->back()->withErrors("Mohon upload module!", "server");
+
+    }
+    public function updateStudyRoomTask($id, Request $request)
+    {
+        $validated = $request->validate([
+            'description' => 'string|min:3'
+        ]);
+
+        $studyRoomTask = StudyRoomTask::findOrFail($id);
+
+        if (!$studyRoomTask) {
+            return redirect()->back()->withErrors("Modul tidak ditemukan!", "server");
+        }
+
+        $allowedModuleMimeType = ['docx', 'pdf'];
+
+
+        if ($request->hasFile("module")) {
+            $file = $request->file("module");
+            if (!in_array($file->getClientOriginalExtension(), $allowedModuleMimeType)) {
+                return redirect()->back()->withErrors("Hanya bisa menerima file PDF, atau Word", "server");
+            }
+            Storage::disk('public')->delete($studyRoomTask->storage_url);
+            $file = $request->file("module");
+            $storageUrl = $file->store("task_storage_url", 'public');
+            $url = asset(Storage::url($storageUrl));
+            $validated['storage_url'] = $storageUrl;
+            $validated['url'] = $url;
+            $studyRoomTask->update($validated);
+            return redirect()->back();
+        }
+
+        $studyRoomTask->update($validated);
+        return redirect()->back();
+    }
+    public function deleteStudyRoomTask($id)
+    {
+        $learningModule = StudyRoomTask::findOrFail($id);
 
 
         $learningModule->delete();

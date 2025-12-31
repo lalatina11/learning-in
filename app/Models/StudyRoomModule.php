@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class LearningModule extends Model
+class StudyRoomModule extends Model
 {
     protected $table = "learning_modules";
     protected $fillable = ['study_room_id', 'url', 'storage_url', 'description'];

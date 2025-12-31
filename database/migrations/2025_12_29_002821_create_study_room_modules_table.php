@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('learning_modules', function (Blueprint $table) {
+        Schema::create('study_room_modules', function (Blueprint $table) {
             $table->id();
             $table->foreignId('study_room_id')->constrained('study_rooms', 'id')->cascadeOnDelete();
             $table->text('description');
