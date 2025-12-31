@@ -1,17 +1,17 @@
 import StudentTable from '@/components/admin-components/student-table';
 import DashboardPageContainer from '@/components/containers/dashboard-page-container';
-import LearningModuleForm from '@/components/forms/learning-module-form';
+import StudyRoomModuleForm from '@/components/forms/study-room-module-form';
 import LearningModulTable from '@/components/teacher-components/learning-modules-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { LearningModule, StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
+import { StudyRoomModule, StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
 import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
 import { ArrowLeft, Eye, EyeOff, Plus } from 'lucide-react';
 import { useState } from 'react';
 
 export interface StudyRoom extends StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents {
-    learning_modules: Array<LearningModule>;
+    learning_modules: Array<StudyRoomModule>;
 }
 
 interface Props extends PageProps {
@@ -88,14 +88,14 @@ const Details = () => {
                     <div className="mt-3 flex flex-col gap-3">
                         <h1 className="text-lg font-semibold">Materi KBM</h1>
                         <div className="flex items-center gap-2">
-                            <LearningModuleForm type="create" studyRoomId={studyRoom.id}>
+                            <StudyRoomModuleForm type="create" studyRoomId={studyRoom.id}>
                                 <Button>
                                     <Plus />
                                     <span>
                                         <span className="hidden sm:inline">Tambah</span> Materi
                                     </span>
                                 </Button>
-                            </LearningModuleForm>
+                            </StudyRoomModuleForm>
                         </div>
                         <LearningModulTable />
                     </div>
@@ -104,14 +104,14 @@ const Details = () => {
                     <div className="mt-3 flex flex-col gap-3">
                         <h1 className="text-lg font-semibold">Data Penugasan</h1>
                         <div className="flex items-center gap-2">
-                            <LearningModuleForm type="create" studyRoomId={studyRoom.id}>
+                            <StudyRoomModuleForm type="create" studyRoomId={studyRoom.id}>
                                 <Button>
                                     <Plus />
                                     <span>
                                         <span className="hidden sm:inline">Tambah</span> Materi
                                     </span>
                                 </Button>
-                            </LearningModuleForm>
+                            </StudyRoomModuleForm>
                         </div>
                         <LearningModulTable />
                     </div>

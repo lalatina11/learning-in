@@ -24,7 +24,7 @@ interface ActionProps {
     learningModule?: StudyRoomModule;
 }
 
-export default function LearningModuleForm({ children, type, studyRoomId, learningModule }: Props) {
+export default function StudyRoomModuleForm({ children, type, studyRoomId, learningModule }: Props) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     function handleCloseDialog() {

@@ -3,7 +3,7 @@ import { PageProps } from '@/types/page-props';
 import { usePage } from '@inertiajs/react';
 import { Copy, Edit, Trash } from 'lucide-react';
 import { toast } from 'sonner';
-import LearningModuleForm from '../forms/learning-module-form';
+import StudyRoomModuleForm from '../forms/study-room-module-form';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
@@ -46,18 +46,18 @@ const LearningModulTable = () => {
                                     <Copy />
                                     <span className="hidden md:inline">Copy Url</span>
                                 </Button>
-                                <LearningModuleForm type="update" learningModule={learningModule}>
+                                <StudyRoomModuleForm type="update" learningModule={learningModule}>
                                     <Button>
                                         <Edit />
                                         <span className="hidden md:inline">Edit</span>
                                     </Button>
-                                </LearningModuleForm>
-                                <LearningModuleForm type="delete" learningModule={learningModule}>
+                                </StudyRoomModuleForm>
+                                <StudyRoomModuleForm type="delete" learningModule={learningModule}>
                                     <Button variant={'destructive'}>
                                         <Trash />
                                         <span className="hidden md:inline">Hapus</span>
                                     </Button>
-                                </LearningModuleForm>
+                                </StudyRoomModuleForm>
                             </div>
                         </TableCell>
                     </TableRow>
