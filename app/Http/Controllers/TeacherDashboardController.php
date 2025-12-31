@@ -22,7 +22,7 @@ class TeacherDashboardController extends Controller
     }
     public function showLearningDashboardDetails($id)
     {
-        $studyRoom = StudyRoom::where('teacher_id', request()->user()->id)->with('classroom')->with('teacher')->with('students')->with('learning_subject')->with('learning_modules')->findOrFail($id);
+        $studyRoom = StudyRoom::where('teacher_id', request()->user()->id)->with('classroom')->with('teacher')->with('students')->with('learning_subject')->with('modules')->findOrFail($id);
         return Inertia::render("dashboard/teacher/learning/details", compact("studyRoom"));
     }
 
@@ -94,6 +94,7 @@ class TeacherDashboardController extends Controller
     {
         $learningModule = StudyRoomModule::findOrFail($id);
 
+        Storage::disk('public')->delete($learningModule->storage_url);
 
         $learningModule->delete();
 
@@ -123,7 +124,7 @@ class TeacherDashboardController extends Controller
             }
             $storageUrl = $file->store("study_room_tasks", 'public');
             $url = asset(Storage::url($storageUrl));
-            $validated['task_storage_url'] = $storageUrl;
+            $validated['storage_url'] = $storageUrl;
             $validated['url'] = $url;
             StudyRoomTask::create($validated);
             return redirect()->back();
