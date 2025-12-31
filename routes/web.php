@@ -68,6 +68,7 @@ Route::middleware(['auth.middleware'])->group(function () {
                     Route::post('/{id}/create-study-room-task', [TeacherDashboardController::class, 'createStudyRoomTask'])->name('dashboard.teacher.learning.details.create-study-room-task');
                     Route::patch('/{id}/update-study-room-task', [TeacherDashboardController::class, 'updateStudyRoomTask'])->name('dashboard.teacher.learning.update-study-room-task');
                     Route::delete('/{id}/delete-study-room-task', [TeacherDashboardController::class, 'deleteStudyRoomTask'])->name('dashboard.teacher.learning.delete-study-room-task');
+                    Route::patch('/{id}/switch-study-room-task-status', [TeacherDashboardController::class, 'switchStudyRoomTaskStatus'])->name('dashboard.teacher.learning.switch-study-room-task');
                 });
             });
         });
