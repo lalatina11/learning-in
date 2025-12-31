@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('study_room_id')->constrained('study_rooms', 'id')->cascadeOnDelete();
             $table->string('description');
-            $table->string('task');
+            $table->string('url');
             $table->string('storage_url');
             $table->boolean('is_closed')->default(false);
             $table->timestamps();
