@@ -1,10 +1,12 @@
 import StudentTable from '@/components/admin-components/student-table';
 import DashboardPageContainer from '@/components/containers/dashboard-page-container';
 import StudyRoomModuleForm from '@/components/forms/study-room-module-form';
+import StudyRoomTaskForm from '@/components/forms/study-room-task-form';
 import StudyRoomModuleTable from '@/components/teacher-components/study-room-module-table';
+import StudyRoomTaskTable from '@/components/teacher-components/study-room-task-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { StudyRoomModule, StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
+import { StudyRoomModule, StudyRoomTask, StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
 import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
 import { ArrowLeft, Eye, EyeOff, Plus } from 'lucide-react';
@@ -12,6 +14,7 @@ import { useState } from 'react';
 
 export interface StudyRoom extends StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents {
     modules: Array<StudyRoomModule>;
+    tasks: Array<StudyRoomTask>;
 }
 
 interface Props extends PageProps {
@@ -20,6 +23,7 @@ interface Props extends PageProps {
 
 const Details = () => {
     const { studyRoom } = usePage().props as Props;
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     console.log(studyRoom);
 
     const [isShowStudentsTable, setIsShowStudentsTable] = useState(false);
@@ -104,16 +108,16 @@ const Details = () => {
                     <div className="mt-3 flex flex-col gap-3">
                         <h1 className="text-lg font-semibold">Data Penugasan</h1>
                         <div className="flex items-center gap-2">
-                            <StudyRoomModuleForm type="create" studyRoomId={studyRoom.id}>
+                            <StudyRoomTaskForm type="create" studyRoomId={studyRoom.id}>
                                 <Button>
                                     <Plus />
                                     <span>
-                                        <span className="hidden sm:inline">Tambah</span> Materi
+                                        <span className="hidden sm:inline">Tambah</span> Tugas
                                     </span>
                                 </Button>
-                            </StudyRoomModuleForm>
+                            </StudyRoomTaskForm>
                         </div>
-                        <StudyRoomModuleTable />
+                        <StudyRoomTaskTable />
                     </div>
                 </div>
             </div>
