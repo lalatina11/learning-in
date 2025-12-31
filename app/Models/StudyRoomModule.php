@@ -14,4 +14,7 @@ class StudyRoomModule extends Model
         return $this->belongsTo(StudyRoom::class, 'study_room_id');
     }
 
+    protected $hidden = ['storage_url'];
+
+
 }
