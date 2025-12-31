@@ -9,7 +9,6 @@ export type StudyRoom = StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubje
 
 const StudyRoomTable = () => {
     const { studyRooms, auth } = usePage().props as PageProps & { studyRooms: Array<StudyRoom>; auth: Auth };
-    console.log(studyRooms);
 
     return (
         <Table className="w-1 sm:w-2/3">
