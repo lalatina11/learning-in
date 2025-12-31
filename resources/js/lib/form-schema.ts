@@ -76,7 +76,7 @@ const allowedStudyRoomTaskFileFormat = ['application/vnd.openxmlformats-officedo
 
 export const studyRoomTaskSchema = z.object({
     description: z.string().min(3, 'Minimal 3 karakter'),
-    module: z
+    task: z
         .file()
         .refine((file) => allowedStudyRoomTaskFileFormat.includes(file.type), 'Hanya bisa upload file docx, dan PDF')
         .optional(),
