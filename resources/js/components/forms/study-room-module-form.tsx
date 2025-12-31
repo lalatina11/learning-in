@@ -78,7 +78,7 @@ function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
                 handleCloseDialog();
             },
         };
-        router.post(`/dashboard/teacher/learning/modules/${studyRoomId}/create-learning-module`, values, requestOptions);
+        router.post(`/dashboard/teacher/learning/modules/${studyRoomId}/create-study-room-module`, values, requestOptions);
     }
 
     const isFormBusy = isLoading || form.formState.isLoading || form.formState.isSubmitting;
@@ -165,7 +165,7 @@ function Update({ handleCloseDialog, module }: ActionProps) {
                 handleCloseDialog();
             },
         };
-        router.patch(`/dashboard/teacher/learning/modules/${module?.id}/update-learning-module`, values, requestOptions);
+        router.patch(`/dashboard/teacher/learning/modules/${module?.id}/update-study-room-module`, values, requestOptions);
     }
 
     const isFormBusy = isLoading || form.formState.isLoading || form.formState.isSubmitting;
@@ -239,7 +239,7 @@ function Delete({ module, handleCloseDialog }: ActionProps) {
                 handleCloseDialog();
             },
         };
-        router.delete(`/dashboard/teacher/learning/modules/${module?.id}/delete-learning-module`, requestOptions);
+        router.delete(`/dashboard/teacher/learning/modules/${module?.id}/delete-study-room-module`, requestOptions);
     }
 
     const isButtonBusy = isLoading;
