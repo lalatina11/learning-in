@@ -279,7 +279,8 @@ class AdminDashboardController extends Controller
     {
         $validated = $request->validate([
             'classroom_id' => "int|min:1",
-            'teacher_id' => "int|min:1"
+            'teacher_id' => "int|min:1",
+            'learning_subject_id' => 'required|int|min:1'
         ]);
 
         $existingStudyRoom = StudyRoom::findOrFail($id);
