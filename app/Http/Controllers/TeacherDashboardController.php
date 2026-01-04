@@ -209,6 +209,7 @@ class TeacherDashboardController extends Controller
         if (!$validated['teacher_note']) {
             $validated['teacher_note'] = $studyRoomTaskSubmission->teacher_note || "";
         }
+        $validated['is_rated'] = true;
         $studyRoomTaskSubmission->update($validated);
         return redirect()->back();
     }
