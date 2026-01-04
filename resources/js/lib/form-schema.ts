@@ -83,3 +83,11 @@ export const studyRoomTaskSchema = z.object({
 });
 
 export type StudyRoomTaskSchemaType = z.infer<typeof studyRoomTaskSchema>;
+
+export const studyRoomTaskSubmissionSchema = z.object({
+    url: z.string().min(5, 'Minimal 5 karakter').optional(),
+    teacher_note: z.string().optional(),
+    rate: z.coerce.number().optional(),
+});
+
+export type StudyRoomTaskSubmissionSchemaType = z.infer<typeof studyRoomTaskSubmissionSchema>;
