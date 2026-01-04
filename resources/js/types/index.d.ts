@@ -116,3 +116,24 @@ interface StudyRoomTask extends TimeStamp {
     url: string;
     is_closed: boolean;
 }
+interface StudyRoomTaskSubmission extends TimeStamp {
+    id: number;
+    student_id: number;
+    task_id: number;
+    url: string;
+    rate: number;
+    is_rated: boolean;
+    teacher_note: string;
+}
+
+interface StudyRoomTaskWithSubmission extends StudyRoomTask {
+    task_submissions: Array<StudyRoomTaskSubmission>;
+}
+
+interface StudyRoomTaskSubmissionWithStudent extends StudyRoomTaskSubmission {
+    student: User;
+}
+
+interface StudyRoomTaskWithSubmissionAndStudent extends StudyRoomTask {
+    task_submissions: Array<StudyRoomTaskSubmissionWithStudent>;
+}
