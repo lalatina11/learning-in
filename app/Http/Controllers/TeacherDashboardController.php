@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\StudyRoom;
 use App\Models\StudyRoomModule;
 use App\Models\StudyRoomTask;
+use App\Models\StudyRoomTaskSubmission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -22,7 +23,7 @@ class TeacherDashboardController extends Controller
     }
     public function showLearningDashboardDetails($id)
     {
-        $studyRoom = StudyRoom::where('teacher_id', request()->user()->id)->with('classroom')->with('teacher')->with('students')->with('learning_subject')->with('modules')->with('tasks')->findOrFail($id);
+        $studyRoom = StudyRoom::where('teacher_id', request()->user()->id)->with(['classroom', 'teacher', 'students', 'learning_subject', 'modules', 'tasks.taskSubmissions.student'])->findOrFail($id);
         return Inertia::render("dashboard/teacher/learning/details", compact("studyRoom"));
     }
 
@@ -192,6 +193,23 @@ class TeacherDashboardController extends Controller
 
         $studyRoomTask->update(['is_closed' => !$studyRoomTask->is_closed]);
 
+        return redirect()->back();
+    }
+
+    public function ratingTaskSubmission($id, Request $request)
+    {
+        $validated = $request->validate([
+            'rate' => 'integer|min:0',
+            'teacher_note' => 'string|nullable'
+        ]);
+        $studyRoomTaskSubmission = StudyRoomTaskSubmission::findOrFail($id);
+        if (!$studyRoomTaskSubmission) {
+            return redirect()->back()->withErrors("Pekerjaan Tugas tidak valid", 'server');
+        }
+        if (!$validated['teacher_note']) {
+            $validated['teacher_note'] = $studyRoomTaskSubmission->teacher_note || "";
+        }
+        $studyRoomTaskSubmission->update($validated);
         return redirect()->back();
     }
 }
