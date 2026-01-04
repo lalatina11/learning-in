@@ -1,7 +1,7 @@
 import { Auth, StudyRoomModule, StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
 import { PageProps } from '@/types/page-props';
 import { usePage } from '@inertiajs/react';
-import { Copy, Edit, Trash } from 'lucide-react';
+import { Copy, Download, Edit, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 import StudyRoomModuleForm from '../forms/study-room-module-form';
 import { Button } from '../ui/button';
@@ -11,20 +11,35 @@ export interface StudyRoom extends StudyRoomWithClassRoomAndTeacherAndMajorAndLe
     modules: Array<StudyRoomModule>;
 }
 
+interface DownloadButtonProps {
+    url: string;
+    index: number;
+}
+
 const StudyRoomModuleTable = () => {
     const { studyRoom, auth } = usePage().props as PageProps & { studyRoom: StudyRoom; auth: Auth };
 
     const { modules } = studyRoom;
 
+    const isTeacher = auth.user.role === 'TEACHER';
+
+    function handleModuleDownload(props: DownloadButtonProps) {
+        const link = document.createElement('a');
+        link.href = props.url;
+        link.download = `Module-${studyRoom.classroom.grade}-${studyRoom.classroom.major.name}-${studyRoom.learning_subject.name}-${props.index}`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     return (
         <Table className="w-full">
-            <TableCaption>A list of your recent invoices.</TableCaption>
+            <TableCaption>Semua data Module KBM sudah dimuat.</TableCaption>
             <TableHeader>
                 <TableRow>
                     <TableHead className="w-[100px]">#</TableHead>
                     <TableHead>Deskripsi</TableHead>
-                    <TableHead>Url</TableHead>
-                    <TableHead>Aksi</TableHead>
+                    <TableHead className="text-center">Aksi</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -33,10 +48,7 @@ const StudyRoomModuleTable = () => {
                         <TableCell className="font-medium">{index + 1}</TableCell>
                         <TableCell>{module.description}</TableCell>
                         <TableCell>
-                            <span className="max-w-[300px] truncate">{module.url.slice(37)}</span>
-                        </TableCell>
-                        <TableCell>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-center gap-2">
                                 <Button
                                     onClick={() => {
                                         navigator.clipboard.writeText(module.url);
@@ -46,18 +58,37 @@ const StudyRoomModuleTable = () => {
                                     <Copy />
                                     <span className="hidden md:inline">Copy Url</span>
                                 </Button>
-                                <StudyRoomModuleForm type="update" module={module}>
-                                    <Button>
-                                        <Edit />
-                                        <span className="hidden md:inline">Edit</span>
-                                    </Button>
-                                </StudyRoomModuleForm>
-                                <StudyRoomModuleForm type="delete" module={module}>
-                                    <Button variant={'destructive'}>
-                                        <Trash />
-                                        <span className="hidden md:inline">Hapus</span>
-                                    </Button>
-                                </StudyRoomModuleForm>
+                                {isTeacher && (
+                                    <>
+                                        <StudyRoomModuleForm type="update" module={module}>
+                                            <Button>
+                                                <Edit />
+                                                <span className="hidden md:inline">Edit</span>
+                                            </Button>
+                                        </StudyRoomModuleForm>
+                                        <StudyRoomModuleForm type="delete" module={module}>
+                                            <Button variant={'destructive'}>
+                                                <Trash />
+                                                <span className="hidden md:inline">Hapus</span>
+                                            </Button>
+                                        </StudyRoomModuleForm>
+                                    </>
+                                )}
+                                {!isTeacher && (
+                                    <>
+                                        <Button
+                                            onClick={() =>
+                                                handleModuleDownload({
+                                                    url: module.url,
+                                                    index: index + 1,
+                                                })
+                                            }
+                                        >
+                                            <Download />
+                                            <span className="hidden md:inline">Download</span>
+                                        </Button>
+                                    </>
+                                )}
                             </div>
                         </TableCell>
                     </TableRow>
