@@ -1,4 +1,4 @@
-import { studyRoomTaskSchema, StudyRoomTaskSchemaType } from '@/lib/form-schema';
+import { studyRoomTaskSchema, StudyRoomTaskSchemaType, studyRoomTaskSubmissionSchema, StudyRoomTaskSubmissionSchemaType } from '@/lib/form-schema';
 import { StudyRoomTask } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from '@inertiajs/react';
@@ -14,7 +14,7 @@ import { Textarea } from '../ui/textarea';
 
 interface Props {
     children: ReactNode;
-    type: 'create' | 'update' | 'delete' | 'switchClosed';
+    type: 'create' | 'update' | 'delete' | 'switchClosed' | 'submission';
     studyRoomId?: number;
     task?: StudyRoomTask;
 }
@@ -40,6 +40,8 @@ export default function StudyRoomTaskForm({ children, type, studyRoomId, task }:
                 <Update handleCloseDialog={handleCloseDialog} task={task} />
             ) : type === 'delete' ? (
                 <Delete handleCloseDialog={handleCloseDialog} task={task} />
+            ) : type === 'submission' ? (
+                <Submission handleCloseDialog={handleCloseDialog} task={task} />
             ) : (
                 <SwitchClosed handleCloseDialog={handleCloseDialog} task={task} />
             )}
@@ -54,7 +56,7 @@ function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
         defaultValues: { description: '', task: undefined },
     });
 
-    function handleChangeInputModuleFile(e: ChangeEvent<HTMLInputElement>) {
+    function handleChangeTaskFile(e: ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
         form.setValue('task', file);
     }
@@ -115,7 +117,7 @@ function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
                         render={({ field, fieldState }) => (
                             <Field data-invalid={fieldState.invalid}>
                                 <FieldLabel htmlFor={field.name}>Tugas</FieldLabel>
-                                <Input type="file" onChange={handleChangeInputModuleFile} id={field.name} />
+                                <Input type="file" onChange={handleChangeTaskFile} id={field.name} />
                                 <FieldError errors={[fieldState.error]} />
                                 <FieldDescription>Tugas wajib diisi</FieldDescription>
                             </Field>
@@ -157,13 +159,13 @@ function Update({ handleCloseDialog, task }: ActionProps) {
                 const errorMessage = err.server[0] || 'Terjadi kesalahan';
                 form.setError('root', { message: errorMessage });
 
-                toast.error(`Gagal Mengubah Module Pembelajaran ini`, {
+                toast.error(`Gagal Mengubah Tugas ini`, {
                     description: errorMessage,
                     action: { label: 'OK', onClick: () => {} },
                 });
             },
             onSuccess: () => {
-                toast.success(`Berhasil Mengubah Module Pembelajaran ini`, {
+                toast.success(`Berhasil Mengubah Tugas ini`, {
                     action: { label: 'OK', onClick: () => {} },
                 });
                 form.reset();
@@ -199,7 +201,7 @@ function Update({ handleCloseDialog, task }: ActionProps) {
                         name="task"
                         render={({ field, fieldState }) => (
                             <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel htmlFor={field.name}>Module</FieldLabel>
+                                <FieldLabel htmlFor={field.name}>Tugas</FieldLabel>
                                 <Input type="file" onChange={handleChangeInputModuleFile} id={field.name} />
                                 <FieldDescription>Tugas boleh kosong</FieldDescription>
                                 <FieldError errors={[fieldState.error]} />
@@ -317,6 +319,76 @@ function SwitchClosed({ task, handleCloseDialog }: ActionProps) {
                     {isButtonBusy ? <Spinner /> : isClosed && !isButtonBusy ? 'Buka' : !isClosed && !isButtonBusy ? 'Tutup' : ''}
                 </Button>
             </div>
+        </DialogContent>
+    );
+}
+
+function Submission({ handleCloseDialog, task }: ActionProps) {
+    const [isLoading, setIsLoading] = useState(false);
+    const form = useForm({
+        resolver: zodResolver(studyRoomTaskSubmissionSchema),
+        defaultValues: { url: '' },
+    });
+
+    function onSubmit(values: StudyRoomTaskSubmissionSchemaType) {
+        const requestOptions = {
+            onStart: () => setIsLoading(true),
+            onFinish: () => setIsLoading(false),
+            onError: (err: any) => {
+                console.log(err);
+
+                const errorMessage = err.server[0] || 'Terjadi kesalahan';
+                form.setError('root', { message: errorMessage });
+
+                toast.error(`Gagal mengerjakan tugas pada tugas ini`, {
+                    description: errorMessage,
+                    action: { label: 'OK', onClick: () => {} },
+                });
+            },
+            onSuccess: () => {
+                toast.success(`Berhasil mengerjakan tugas pada tugas ini`, {
+                    action: { label: 'OK', onClick: () => {} },
+                });
+                form.reset();
+                handleCloseDialog();
+            },
+        };
+        router.patch(`/dashboard/learning/tasks/${task?.id}/task-submissions`, values, requestOptions);
+    }
+
+    const isFormBusy = isLoading || form.formState.isLoading || form.formState.isSubmitting;
+
+    return (
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Kerjakan Tugas</DialogTitle>
+                <DialogDescription>Kerjakan Tugas</DialogDescription>
+            </DialogHeader>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
+                <FieldGroup>
+                    <FieldError errors={[form.formState.errors.root]} />
+                    <Controller
+                        control={form.control}
+                        name="url"
+                        render={({ field, fieldState }) => (
+                            <Field data-invalid={fieldState.invalid}>
+                                <FieldLabel htmlFor={field.name}>Link</FieldLabel>
+                                <Textarea {...field} id={field.name} defaultValue={task?.description} />
+                                <FieldError errors={[fieldState.error]} />
+                                <FieldDescription>Minimal 5 karakter, berisi link hasil tugas seperti link drive atau sejenisnya.</FieldDescription>
+                            </Field>
+                        )}
+                    />
+                </FieldGroup>
+                <div className="flex justify-end gap-2">
+                    <Button onClick={handleCloseDialog} type="button" variant={'outline'}>
+                        Batal
+                    </Button>
+                    <Button disabled={isFormBusy} type="submit">
+                        {isFormBusy ? <Spinner /> : 'Submit'}
+                    </Button>
+                </div>
+            </form>
         </DialogContent>
     );
 }
