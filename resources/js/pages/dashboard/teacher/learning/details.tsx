@@ -28,7 +28,6 @@ interface Props extends PageProps {
 
 const Details = () => {
     const { studyRoom } = usePage().props as Props;
-    console.log(studyRoom);
 
     const [isShowStudentsTable, setIsShowStudentsTable] = useState(false);
 
