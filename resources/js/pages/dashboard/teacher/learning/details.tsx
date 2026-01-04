@@ -4,9 +4,14 @@ import StudyRoomModuleForm from '@/components/forms/study-room-module-form';
 import StudyRoomTaskForm from '@/components/forms/study-room-task-form';
 import StudyRoomModuleTable from '@/components/teacher-components/study-room-module-table';
 import StudyRoomTaskTable from '@/components/teacher-components/study-room-task-table';
+import StudyRoomWithTaskSubmissions from '@/components/teacher-components/study-room-tasks-with-submissions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { StudyRoomModule, StudyRoomTask, StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
+import {
+    StudyRoomModule,
+    StudyRoomTaskWithSubmissionAndStudent,
+    StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents,
+} from '@/types';
 import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
 import { ArrowLeft, Eye, EyeOff, Plus } from 'lucide-react';
@@ -14,7 +19,7 @@ import { useState } from 'react';
 
 export interface StudyRoom extends StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents {
     modules: Array<StudyRoomModule>;
-    tasks: Array<StudyRoomTask>;
+    tasks: Array<StudyRoomTaskWithSubmissionAndStudent>;
 }
 
 interface Props extends PageProps {
@@ -23,7 +28,6 @@ interface Props extends PageProps {
 
 const Details = () => {
     const { studyRoom } = usePage().props as Props;
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
     console.log(studyRoom);
 
     const [isShowStudentsTable, setIsShowStudentsTable] = useState(false);
@@ -106,7 +110,7 @@ const Details = () => {
                 </div>
                 <div>
                     <div className="mt-3 flex flex-col gap-3">
-                        <h1 className="text-lg font-semibold">Data Penugasan</h1>
+                        <h1 className="text-lg font-semibold">Daftar Tugas</h1>
                         <div className="flex items-center gap-2">
                             <StudyRoomTaskForm type="create" studyRoomId={studyRoom.id}>
                                 <Button>
@@ -118,6 +122,11 @@ const Details = () => {
                             </StudyRoomTaskForm>
                         </div>
                         <StudyRoomTaskTable />
+                    </div>
+                    <div className="mt-3 flex flex-col gap-3">
+                        <h1 className="text-lg font-semibold">Daftar Pengerjaan Tugas</h1>
+                        <div className="flex items-center gap-2"></div>
+                        <StudyRoomWithTaskSubmissions tasks={studyRoom.tasks} />
                     </div>
                 </div>
             </div>
