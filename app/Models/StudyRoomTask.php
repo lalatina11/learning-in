@@ -13,6 +13,21 @@ class StudyRoomTask extends Model
         return $this->belongsTo(StudyRoom::class, 'study_room_id');
     }
 
-
     protected $hidden = ['storage_url'];
+
+    public function taskSubmissions()
+    {
+        return $this->hasMany(StudyRoomTaskSubmission::class, 'task_id');
+    }
+
+    public function submittedTasks()
+    {
+        return $this->belongsToMany(
+            StudyRoomTask::class,
+            'study_room_task_submissions',
+            'task_id',
+            'student_id',
+        )->withPivot(['url', 'rate', 'is_rated', 'teacher_note'])
+            ->withTimestamps();
+    }
 }
