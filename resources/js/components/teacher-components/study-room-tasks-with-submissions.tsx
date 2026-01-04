@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { Button } from '../animate-ui/components/buttons/button';
 import { Accordion, AccordionButton, AccordionItem, AccordionPanel } from '../animate-ui/components/headless/accordion';
 import TaskSubmissionForm from '../forms/task-submission-form';
+import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
@@ -61,6 +62,7 @@ function TaskSubmissionTable({ submission }: TableProps) {
                     <TableHead>NIM</TableHead>
                     <TableHead>Nama</TableHead>
                     <TableHead>Nilai</TableHead>
+                    <TableHead>Status Penilaian</TableHead>
                     <TableHead>Catatan Guru</TableHead>
                     <TableHead>URL</TableHead>
                     <TableHead className="text-center">Aksi</TableHead>
@@ -73,6 +75,11 @@ function TaskSubmissionTable({ submission }: TableProps) {
                         <TableCell>{submission.student.master_number}</TableCell>
                         <TableCell>{submission.student.name}</TableCell>
                         <TableCell>{submission.rate}</TableCell>
+                        <TableCell>
+                            <Badge variant={submission.is_rated ? 'default' : 'secondary'}>
+                                {submission.is_rated ? 'Sudah Dinilai' : 'Belum dinilai'}
+                            </Badge>
+                        </TableCell>
                         <TableCell>{submission.teacher_note}</TableCell>
                         <TableCell>{submission.url.slice(0, 5)}</TableCell>
                         <TableCell>
