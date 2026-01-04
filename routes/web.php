@@ -70,10 +70,19 @@ Route::middleware(['auth.middleware'])->group(function () {
                     Route::delete('/{id}/delete-study-room-task', [TeacherDashboardController::class, 'deleteStudyRoomTask'])->name('dashboard.teacher.learning.delete-study-room-task');
                     Route::patch('/{id}/switch-study-room-task-status', [TeacherDashboardController::class, 'switchStudyRoomTaskStatus'])->name('dashboard.teacher.learning.switch-study-room-task');
                 });
+                Route::prefix('/tasks-submission')->group(function () {
+                    Route::post('/{id}/rating-task-submission', [TeacherDashboardController::class, 'ratingTaskSubmission'])->name('teacher.learning.task-submission.rating-task-submission');
+                });
             });
         });
         Route::middleware(['student.middleware'])->group(function () {
             Route::get('/', [StudentDashboardController::class, 'showStudentDashboard'])->name('dashboard.student');
+            Route::prefix('/learning')->group(function () {
+                Route::get('/', [StudentDashboardController::class, 'showStudentLearningDashboard'])->name('dashboard.student.learning.index');
+                Route::get('/{id}', [StudentDashboardController::class, 'showStudentLearningDashboardDetails'])->name('dashboard.student.learning.details');
+                Route::patch('tasks/{id}/task-submissions', [StudentDashboardController::class, 'taskSubmission'])->name('dashboard.student.learning.task.submission');
+                Route::patch('tasks/{id}/task-', [StudentDashboardController::class, 'taskSubmission'])->name('dashboard.student.learning.task.submission');
+            });
         });
     });
     Route::delete('/logout', [AuthController::class, 'logout'])->name('logout');
