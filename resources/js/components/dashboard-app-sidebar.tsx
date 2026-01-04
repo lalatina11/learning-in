@@ -42,7 +42,10 @@ const getSidebarMenuByUserRole = (role: UserType['role']) => {
             { title: 'Mengajar', icon: School2Icon, url: '/dashboard/teacher/learning' },
         ] satisfies Array<SidebarMenuNavigationItem>;
     }
-    return [{ title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' }] satisfies Array<SidebarMenuNavigationItem>;
+    return [
+        { title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' },
+        { title: 'Sekolah', icon: School, url: '/dashboard/learning' },
+    ] satisfies Array<SidebarMenuNavigationItem>;
 };
 
 const DashboardAppSidebar = () => {
