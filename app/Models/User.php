@@ -73,4 +73,21 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(StudyRoom::class, 'student_in_the_study_room', 'student_id', 'study_room_id');
     }
+
+    public function taskSubmissions()
+    {
+        return $this->hasMany(StudyRoomTaskSubmission::class);
+    }
+
+    public function submittedTasks()
+    {
+        return $this->belongsToMany(
+            StudyRoomTask::class,
+            'study_room_task_submissions',
+            'student_id',
+            'task_id'
+        )->withPivot(['url', 'rate', 'is_rated', 'teacher_note'])
+            ->withTimestamps();
+    }
+
 }
