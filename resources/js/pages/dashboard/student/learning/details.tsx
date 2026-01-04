@@ -1,16 +1,21 @@
 import DashboardPageContainer from '@/components/containers/dashboard-page-container';
+import TaskSubmissionTable from '@/components/student-components/task-submission-table';
 import StudyRoomModuleTable from '@/components/teacher-components/study-room-module-table';
 import StudyRoomTaskTable from '@/components/teacher-components/study-room-task-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { StudyRoomModule, StudyRoomTask, StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
+import {
+    StudyRoomModule,
+    StudyRoomTaskWithSubmissionAndStudent,
+    StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents,
+} from '@/types';
 import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
 
 export interface StudyRoom extends StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents {
     modules: Array<StudyRoomModule>;
-    tasks: Array<StudyRoomTask>;
+    tasks: Array<StudyRoomTaskWithSubmissionAndStudent>;
 }
 
 interface Props extends PageProps {
@@ -19,6 +24,8 @@ interface Props extends PageProps {
 
 const Details = () => {
     const { studyRoom } = usePage().props as Props;
+    console.log(studyRoom);
+
     return (
         <DashboardPageContainer>
             <div className="flex flex-col gap-6">
@@ -75,7 +82,7 @@ const Details = () => {
                 <div id="task-submissions">
                     <div className="mt-3 flex flex-col gap-3">
                         <h1 className="text-lg font-semibold">Daftar Pengerjaan Tugas</h1>
-                        <StudyRoomTaskTable />
+                        <TaskSubmissionTable tasks={studyRoom.tasks} />
                     </div>
                 </div>
             </div>
