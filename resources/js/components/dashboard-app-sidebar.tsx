@@ -14,6 +14,7 @@ import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
 import { ChevronUp, LayoutDashboard, School, School2Icon, User, User2 } from 'lucide-react';
 import LogOutForm from './forms/logout-form';
+import MultiThemeToggler from './multi-theme-toggler';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 const getSidebarMenuByUserRole = (role: UserType['role']) => {
@@ -92,6 +93,9 @@ const DashboardAppSidebar = () => {
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
                                     <span>Billing</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <MultiThemeToggler />
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild className="flex w-full">
                                     <LogOutForm />
