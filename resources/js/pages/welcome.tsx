@@ -82,6 +82,10 @@ const Welcome = () => {
                     whileInView={{ opacity: 1, x: 0, transition: { duration: 0.8 } }}
                 >
                     <Card className="w-3xl">
+                        <CardHeader>
+                            <CardTitle>Potret Anggota</CardTitle>
+                            <CardDescription>Anggota Kelompok 5 Web Programming II</CardDescription>
+                        </CardHeader>
                         <CardContent>
                             <GroupMembers />
                         </CardContent>
