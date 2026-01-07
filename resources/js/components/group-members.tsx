@@ -6,10 +6,10 @@ import { GroupMembersMotionCarousel } from './animate-ui/components/community/gr
 
 export const SLIDES = [
     { image: '/ires.jpeg', name: 'Ires Agil Karisma', nim: '19240730' },
-    { image: '/candra.png', name: 'Candra Rahmadan', nim: '19240731' },
+    { image: '/unggul.PNG', name: 'Unggul Rahmat Pradana', nim: '19240675' },
     { image: '/yoga.jpg', name: 'Yoga Rozan Pradana', nim: '19240730' },
     { image: '/aga.jpg', name: 'Aga Panggih Yanuar Saputra', nim: '19240297' },
-    { image: '/unggul.PNG', name: 'Unggul Rahmat Pradana', nim: '19240675' },
+    { image: '/candra.png', name: 'Candra Rahmadan', nim: '19240731' },
     { image: 'augusta.webp', name: 'Augusta Catur Hasmoro', nim: '19241222' },
 ] as Array<GroupMemberSlide>;
 
