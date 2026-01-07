@@ -60,10 +60,6 @@ const Details = () => {
                                 <span className="flex-1/3 sm:flex-1/2 md:flex-2/8 lg:flex-1/8">Nama Guru</span>
                                 <span className="flex-2/3 sm:flex-1/2 md:flex-6/8 lg:flex-7/8">: {studyRoom.teacher.name}</span>
                             </span>
-                            <span className="flex flex-1">
-                                <span className="flex-1/3 sm:flex-1/2 md:flex-2/8 lg:flex-1/8">Jumlah Siswa</span>
-                                <span className="flex-2/3 sm:flex-1/2 md:flex-6/8 lg:flex-7/8">: {studyRoom.students.length}</span>
-                            </span>
                         </CardDescription>
                     </CardHeader>
                 </Card>

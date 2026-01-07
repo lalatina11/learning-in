@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { studyRoomSchema, StudyRoomSchemaType } from '@/lib/form-schema';
 import { ClassRoomWithMajor, LearningSubject, StudyRoomWithClassRoomAndTeacher, User } from '@/types';
 import { PageProps } from '@/types/page-props';
@@ -52,7 +53,7 @@ function Create({ handleCloseDialog }: ActionProps) {
     const [isLoading, setIsLoading] = useState(false);
     const form = useForm({
         resolver: zodResolver(studyRoomSchema),
-        defaultValues: { classroom_id: 0, teacher_id: 0 },
+        defaultValues: { class_room_id: 0, teacher_id: 0 },
     });
 
     function onSubmit(values: StudyRoomSchemaType) {
@@ -61,12 +62,12 @@ function Create({ handleCloseDialog }: ActionProps) {
         }
         const classRoomIds = classRooms.map((classRoom) => classRoom.id);
         const teachersId = teachers.map((teacher) => teacher.id);
-        if (!classRoomIds.includes(values.classroom_id) && !teachersId.includes(values.teacher_id)) {
-            form.setError('classroom_id', { message: 'Mohon isi Kelas Dan Guru' });
+        if (!classRoomIds.includes(values.class_room_id) && !teachersId.includes(values.teacher_id)) {
+            form.setError('class_room_id', { message: 'Mohon isi Kelas Dan Guru' });
             return form.setError('teacher_id', { message: 'Mohon isi Kelas Dan Guru' });
         }
-        if (!classRoomIds.includes(values.classroom_id)) {
-            return form.setError('classroom_id', { message: 'Mohon isi Kelas' });
+        if (!classRoomIds.includes(values.class_room_id)) {
+            return form.setError('class_room_id', { message: 'Mohon isi Kelas' });
         }
         if (!teachersId.includes(values.teacher_id)) {
             return form.setError('teacher_id', { message: 'Mohon isi Guru' });
@@ -108,11 +109,11 @@ function Create({ handleCloseDialog }: ActionProps) {
                     <FieldError errors={[form.formState.errors.root]} />
                     <Controller
                         control={form.control}
-                        name="classroom_id"
+                        name="class_room_id"
                         render={({ field, fieldState }) => (
                             <Field data-invalid={fieldState.invalid}>
                                 <FieldLabel htmlFor={field.name}>Pilih Kelas</FieldLabel>
-                                <Select onValueChange={(val) => form.setValue('classroom_id', Number(val))}>
+                                <Select onValueChange={(val) => form.setValue('class_room_id', Number(val))}>
                                     <SelectTrigger className="w-[180px]">
                                         <SelectValue placeholder="Pilih Kelas" />
                                     </SelectTrigger>
@@ -201,7 +202,7 @@ function Update({ handleCloseDialog, studyRoom }: ActionProps) {
     const form = useForm({
         resolver: zodResolver(studyRoomSchema),
         defaultValues: {
-            classroom_id: studyRoom?.classroom_id || 0,
+            class_room_id: studyRoom?.class_room_id || 0,
             teacher_id: studyRoom?.teacher_id || 0,
             learning_subject_id: studyRoom?.learning_subject_id || 0,
         },
@@ -214,13 +215,13 @@ function Update({ handleCloseDialog, studyRoom }: ActionProps) {
         const classRoomIds = classRooms.map((classRoom) => classRoom.id);
         const teachersId = teachers.map((teacher) => teacher.id);
 
-        if (!classRoomIds.includes(values.classroom_id) && !teachersId.includes(values.teacher_id)) {
-            form.setError('classroom_id', { message: 'Mohon isi Kelas Dan Guru' });
+        if (!classRoomIds.includes(values.class_room_id) && !teachersId.includes(values.teacher_id)) {
+            form.setError('class_room_id', { message: 'Mohon isi Kelas Dan Guru' });
             return form.setError('teacher_id', { message: 'Mohon isi Kelas Dan Guru' });
         }
 
-        if (!classRoomIds.includes(values.classroom_id)) {
-            return form.setError('classroom_id', { message: 'Mohon isi Kelas' });
+        if (!classRoomIds.includes(values.class_room_id)) {
+            return form.setError('class_room_id', { message: 'Mohon isi Kelas' });
         }
         if (!teachersId.includes(values.teacher_id)) {
             return form.setError('teacher_id', { message: 'Mohon isi Guru' });
@@ -262,20 +263,20 @@ function Update({ handleCloseDialog, studyRoom }: ActionProps) {
                     <FieldError errors={[form.formState.errors.root]} />
                     <Controller
                         control={form.control}
-                        name="classroom_id"
+                        name="class_room_id"
                         render={({ field, fieldState }) => (
                             <Field data-invalid={fieldState.invalid}>
                                 <FieldLabel htmlFor={field.name}>Pilih Kelas</FieldLabel>
                                 <Select
                                     defaultValue={Number(field.value).toString()}
-                                    onValueChange={(val) => form.setValue('classroom_id', Number(val))}
+                                    onValueChange={(val) => form.setValue('class_room_id', Number(val))}
                                 >
                                     <SelectTrigger className="w-[180px]">
                                         <SelectValue
-                                            placeholder={
-                                                `${classRooms.find((classRoom) => classRoom.id === field.value)?.grade} ${classRooms.find((classRoom) => classRoom.id === field.value)?.major.name}` ||
-                                                'Pilih Kelas'
-                                            }
+                                            placeholder={(() => {
+                                                const foundClassRoom = classRooms?.find((classRoom) => classRoom.id === field.value);
+                                                return foundClassRoom ? `${foundClassRoom.grade} ${foundClassRoom.major.name}` : 'Pilih Kelas';
+                                            })()}
                                         />
                                     </SelectTrigger>
                                     <SelectContent>

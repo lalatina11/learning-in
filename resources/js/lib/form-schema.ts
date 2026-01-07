@@ -43,7 +43,7 @@ export const learningSubjectSchema = z.object({
 export type LearningSubjectSchemaType = z.infer<typeof learningSubjectSchema>;
 
 export const studyRoomSchema = z.object({
-    classroom_id: z.coerce.number().default(0),
+    class_room_id: z.coerce.number().default(0),
     teacher_id: z.coerce.number().default(0),
     learning_subject_id: z.coerce.number().default(0),
 });
@@ -67,6 +67,7 @@ export const studyRoomModuleSchema = z.object({
     module: z
         .file()
         .refine((file) => allowedstudyRoomModuleFileFormat.includes(file.type), 'Hanya bisa upload file docx, pptx, dan PDF')
+        .refine((file) => file.size < 5000000, 'Ukuran File tidak boleh melebihi 5MB')
         .optional(),
 });
 

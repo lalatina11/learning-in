@@ -70,6 +70,7 @@ class AdminDashboardController extends Controller
             "name" => "string|min:3",
             "email" => "string|email",
             "password" => "nullable|string",
+            "class_room_id" => "nullable|string",
         ]);
 
         $user = User::findOrFail($id);
@@ -119,7 +120,7 @@ class AdminDashboardController extends Controller
         $majors = Major::all();
         $classRooms = ClassRoom::with('major')->get();
         $teachers = User::where('role', "TEACHER")->get();
-        $studyRooms = StudyRoom::with('teacher')->with('classroom')->with('learning_subject')->get();
+        $studyRooms = StudyRoom::with('teacher')->with('classRoom')->with('learning_subject')->get();
         $learningSubjects = LearningSubject::get();
         return Inertia::render('dashboard/admin/school', compact('majors', 'classRooms', 'teachers', 'studyRooms', 'learningSubjects'));
     }
@@ -248,12 +249,12 @@ class AdminDashboardController extends Controller
     public function createStudyRoom(Request $request)
     {
         $validated = $request->validate([
-            'classroom_id' => "required|int|min:1",
+            'class_room_id' => "required|int|min:1",
             'teacher_id' => "required|int|min:1",
             'learning_subject_id' => 'required|int|min:1'
         ]);
 
-        $existingClassRoom = ClassRoom::findOrFail($validated["classroom_id"]);
+        $existingClassRoom = ClassRoom::findOrFail($validated["class_room_id"]);
 
         if (!$existingClassRoom) {
             return redirect()->back()->withErrors('Kelas tidak valid!', 'server');
@@ -278,7 +279,7 @@ class AdminDashboardController extends Controller
     public function updateStudyRoom($id, Request $request)
     {
         $validated = $request->validate([
-            'classroom_id' => "int|min:1",
+            'class_room_id' => "int|min:1",
             'teacher_id' => "int|min:1",
             'learning_subject_id' => 'required|int|min:1'
         ]);
@@ -289,7 +290,7 @@ class AdminDashboardController extends Controller
             return redirect()->back()->withErrors('KBM tidak valid!', 'server');
         }
 
-        $existingClassRoom = ClassRoom::findOrFail($validated["classroom_id"]);
+        $existingClassRoom = ClassRoom::findOrFail($validated["class_room_id"]);
 
         if (!$existingClassRoom) {
             return redirect()->back()->withErrors('Kelas tidak valid!', 'server');
@@ -321,7 +322,12 @@ class AdminDashboardController extends Controller
 
     public function showStudyRoomDetail($id)
     {
-        $studyRoom = StudyRoom::where('id', $id)->with('teacher')->with('students')->with('classroom')->with('learning_subject')->first();
+        $studyRoom = StudyRoom::where('id', $id)->with([
+            'classroom.major',
+            'classroom.students',
+            'teacher',
+            'learning_subject'
+            ])->first();
         if (!$studyRoom) {
             return redirect()->route('dashboard.admin.manage.school.index');
         }
@@ -399,104 +405,95 @@ class AdminDashboardController extends Controller
         return redirect()->back();
     }
 
-    public function addStudentOnStudyRoom($id, Request $request)
+    public function addStudentToTheClassroom($id, Request $request)
     {
         $validated = $request->validate([
             'user_id' => "required|int|min:1"
         ]);
 
-        $existingStudyRoom = StudyRoom::findOrFail($id);
+        $existingClassRoom = ClassRoom::findOrFail($id);
 
-        if (!$existingStudyRoom) {
-            return redirect()->back()->withErrors('KBM tidak valid', 'server');
+        if (!$existingClassRoom) {
+            return redirect()->back()->withErrors('Kelas tidak valid', 'server');
         }
 
-        $existingUser = User::where('role', 'STUDENT')->findOrFail($validated['user_id']);
+        $existingStudent = User::where('role', 'STUDENT')->findOrFail($validated['user_id']);
 
-        if (!$existingUser) {
+        if (!$existingStudent) {
             return redirect()->back()->withErrors('Murid tidak valid', 'server');
         }
+        
+        if($existingStudent->class_room_id ==$existingClassRoom->id){
+            return redirect()->back()->withErrors('Murid ini sudah terdaftar di kelas ini', 'server');
 
-        $existingStudent = DB::table('student_in_the_study_room')->select(['*'])->where('study_room_id', $existingStudyRoom->id)->where('student_id', $existingUser->id)->first();
-
-        if ($existingStudent) {
-            return redirect()->back()->withErrors('Murid ini sudah masuk dalam KBM', 'server');
         }
 
-        DB::table('student_in_the_study_room')->insert([
-            'study_room_id' => $existingStudyRoom->id,
-            'student_id' => $existingUser->id
-        ]);
+        $existingStudent->update(['class_room_id' => $existingClassRoom->id]);
 
         return redirect()->back();
     }
-    public function changeStudentOnStudyRoom($id, $userId, Request $request)
+    public function changeStudentInTheClassRoom($id, $userId, Request $request)
     {
         $validated = $request->validate([
             'user_id' => "required|int|min:1"
         ]);
 
-        $existingStudyRoom = StudyRoom::findOrFail($id);
+        $existingClassRoom = StudyRoom::findOrFail($id);
 
-        if (!$existingStudyRoom) {
-            return redirect()->back()->withErrors('KBM tidak valid', 'server');
+        if (!$existingClassRoom) {
+            return redirect()->back()->withErrors('Kelas tidak valid', 'server');
         }
 
-        $existingRecentUser = User::where('role', 'STUDENT')->findOrFail($userId);
+        $existingRecentStudent = User::where('role', 'STUDENT')->where('class_room_id', $existingClassRoom->id)->findOrFail($userId);
 
-        if (!$existingRecentUser) {
+        if (!$existingRecentStudent) {
             return redirect()->back()->withErrors('Murid tidak valid', 'server');
         }
-
-        $existingStudent = DB::table('student_in_the_study_room')->select(['*'])->where('study_room_id', $existingStudyRoom->id)->where('student_id', $existingRecentUser->id)->first();
-
-        if (!$existingStudent) {
-            return redirect()->back()->withErrors('Murid ini tidak tersedia dalam KBM', 'server');
+        
+        $existingNewStudent = User::where('role', 'STUDENT')->findOrFail($validated['user_id']);
+        
+        if ($existingRecentStudent->id ==$existingNewStudent->id) {
+            return redirect()->back()->withErrors('Murid lama dan murid pengganti tidak boleh sama!', 'server');
         }
-
-        $existingNewUser = User::where('role', 'STUDENT')->findOrFail($validated['user_id']);
-
-        if (!$existingNewUser) {
+        if (!$existingNewStudent) {
             return redirect()->back()->withErrors('Murid pengganti tidak valid!', 'server');
         }
-
-        $isConflictUser = DB::table('student_in_the_study_room')->select()->where('study_room_id', $existingStudyRoom->id)->where('student_id', $existingNewUser->id)->first();
-
-        if ($isConflictUser && $isConflictUser->id != $existingStudent->student_id) {
-            return redirect()->back()->withErrors('Murid Pengganti sudah tersedia dalam KBM', 'server');
+        
+        if($existingNewStudent->class_room_id ==$existingClassRoom->id){
+            return redirect()->back()->withErrors('Murid pengganti sudah terdaftar di kelas ini!', 'server');
         }
 
-        DB::table('student_in_the_study_room')->select()->where(
-            'id',
-            $existingStudent->id,
-        )->update(['student_id' => $existingNewUser->id]);
+        $existingRecentStudent->update(['class_room_id' => null]);
+
+        $existingNewStudent->update(['class_room_id' => $existingClassRoom->id]);
 
         return redirect()->back();
     }
-    public function deleteStudentOnStudyRoom($id, $userId)
+    public function deleteStudentInTheClassRoom($id, $userId)
     {
 
-        $existingStudyRoom = StudyRoom::findOrFail($id);
+        $existingClassRoom = ClassRoom::findOrFail($id);
 
-        if (!$existingStudyRoom) {
-            return redirect()->back()->withErrors('KBM tidak valid', 'server');
+        if (!$existingClassRoom) {
+            return redirect()->back()->withErrors('Kelas tidak valid', 'server');
         }
 
-        $existingUser = User::where('role', 'STUDENT')->findOrFail($userId);
-
-        if (!$existingUser) {
-            return redirect()->back()->withErrors('Murid tidak valid', 'server');
-        }
-
-        $existingStudent = DB::table('student_in_the_study_room')->select()->where('study_room_id', $existingStudyRoom->id)->where('student_id', $existingUser->id)->first();
+        $existingStudent = User::where('role', 'STUDENT')->where('id', $userId)->where('class_room_id', $existingClassRoom->id)->first();
 
         if (!$existingStudent) {
-            return redirect()->back()->withErrors('Murid ini tidak tersedia dalam KBM', 'server');
+            return redirect()->back()->withErrors('Murid tidak ada dalam kelas', 'server');
         }
 
-        DB::table('student_in_the_study_room')->delete($existingStudent->id);
+        $existingStudent->update(['class_room_id' => null]);
 
         return redirect()->back();
+    }
+
+    public function showClassRoomDetail($id)
+    {
+        $classroom = ClassRoom::with(['major', 'students', 'studyRooms'])->findOrFail($id);
+        $studentList = User::where('role', 'STUDENT')->get();
+        return Inertia::render('dashboard/admin/class-room-detail', compact('classroom','studentList'));
     }
 
 }

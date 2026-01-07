@@ -17,8 +17,18 @@ class ClassRoom extends Model
         return $this->belongsTo(Major::class, 'major_id');
     }
 
-    public function studyRoom()
+    public function studyRooms()
     {
         return $this->hasMany(StudyRoom::class);
+    }
+
+    public function students()
+    {
+        return $this->hasMany(User::class);
+    }
+
+    public function studentsCount()
+    {
+        return $this->students()->count();
     }
 }

@@ -42,7 +42,7 @@ const Welcome = () => {
             </header>
             <motion.main
                 initial={{ opacity: 0, y: 500 }}
-                whileInView={{ opacity: 1, y: 0, transition: { duration: 1 } }}
+                animate={{ opacity: 1, y: 0, transition: { duration: 1 } }}
                 className="container mx-auto flex flex-col gap-3"
             >
                 <section className="flex h-72 flex-col items-center justify-center gap-2">

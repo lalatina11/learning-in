@@ -1,7 +1,8 @@
 import { ClassRoomWithMajor } from '@/types';
-import { Edit, Trash } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { Edit, ScanEye, Trash } from 'lucide-react';
+import { Button } from '../animate-ui/components/buttons/button';
 import ClassRoomForm from '../forms/class-room-form';
-import { Button } from '../ui/button';
 import { CardContent } from '../ui/card';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
@@ -36,6 +37,12 @@ const ClassRoomTable = ({ classRooms }: Props) => {
                                 <TableCell>{`${classRoom.grade} ${classRoom.major.name}`}</TableCell>
                                 <TableCell>
                                     <div className="flex items-center justify-center gap-2">
+                                        <Button asChild>
+                                            <Link href={`/dashboard/admin/school/class-room/${classRoom.id}`}>
+                                                <ScanEye />
+                                                <span className="hidden md:inline">Detail</span>
+                                            </Link>
+                                        </Button>
                                         <ClassRoomForm type="update" classRoom={classRoom}>
                                             <Button>
                                                 <Edit />

@@ -22,7 +22,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'master_number'
+        'master_number',
+        'class_room_id',
     ];
 
     /**
@@ -69,9 +70,9 @@ class User extends Authenticatable
         return $this->hasMany(StudyRoom::class, 'teacher_id');
     }
 
-    public function studyRooms()
+    public function classRoom()
     {
-        return $this->belongsToMany(StudyRoom::class, 'student_in_the_study_room', 'student_id', 'study_room_id');
+        return $this->belongsTo(ClassRoom::class, 'class_room_id');
     }
 
     public function taskSubmissions()

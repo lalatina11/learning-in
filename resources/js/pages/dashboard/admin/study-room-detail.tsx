@@ -1,17 +1,32 @@
 import StudentTable from '@/components/admin-components/student-table';
+import { Button } from '@/components/animate-ui/components/buttons/button';
 import DashboardPageContainer from '@/components/containers/dashboard-page-container';
-import StudentInTheStudyRoomForm from '@/components/forms/student-in-the-study-room-form';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
+import { ClassRoom, LearningSubject, Major, StudyRoom, User } from '@/types/model-type';
 import { Link } from '@inertiajs/react';
-import { ArrowLeft, Plus } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
+
+interface ClassRoomWithMajorAndStudent extends ClassRoom {
+    students: Array<User>;
+    major: Major;
+}
+
+export interface CustomStudyRoom extends StudyRoom {
+    classroom: ClassRoomWithMajorAndStudent;
+    learning_subject: LearningSubject;
+    teacher: User;
+}
 
 interface Props {
-    studyRoom: StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents;
+    studyRoom: CustomStudyRoom;
 }
 
 const StudyRoomDetail = ({ studyRoom }: Props) => {
+    const [isShowStudentsTable, setIsShowStudentsTable] = useState(false);
+
+    const handleSwitchIsShowStudentTable = () => setIsShowStudentsTable((prev) => !prev);
+
     return (
         <DashboardPageContainer>
             <div className="flex flex-col gap-6">
@@ -48,25 +63,23 @@ const StudyRoomDetail = ({ studyRoom }: Props) => {
                             </span>
                             <span className="flex flex-1">
                                 <span className="flex-1/3 sm:flex-1/2 md:flex-2/8 lg:flex-1/8">Jumlah Siswa</span>
-                                <span className="flex-2/3 sm:flex-1/2 md:flex-6/8 lg:flex-7/8">: {studyRoom.students.length}</span>
+                                <span className="flex-2/3 sm:flex-1/2 md:flex-6/8 lg:flex-7/8">: {studyRoom.classroom.students.length}</span>
                             </span>
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-col gap-2">
-                        <div>
-                            <StudentInTheStudyRoomForm type="create" studyRoomId={studyRoom.id}>
-                                <Button>
-                                    <Plus />
-                                    <div className="flex items-center gap-1">
-                                        <span className="hidden md:inline">Tambahkan</span>
-                                        <span>Murid</span>
-                                    </div>
-                                </Button>
-                            </StudentInTheStudyRoomForm>
-                        </div>
-                        <div>
-                            <StudentTable users={studyRoom.students} studyRoomId={studyRoom.id} />
-                        </div>
+                        <Button variant={isShowStudentsTable ? 'destructive' : 'default'} className="w-fit" onClick={handleSwitchIsShowStudentTable}>
+                            {isShowStudentsTable ? <EyeOff /> : <Eye />}
+                            <div className="flex items-center gap-1">
+                                <span className="hidden lg:inline">{isShowStudentsTable ? 'Sembunyikan' : 'Lihat'}</span>
+                                <span>Siswa</span>
+                            </div>
+                        </Button>
+                        {isShowStudentsTable && (
+                            <div>
+                                <StudentTable params="studyroom" users={studyRoom.classroom.students} classRoomId={studyRoom.classroom.id} />
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
             </div>

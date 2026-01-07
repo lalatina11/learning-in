@@ -1,7 +1,8 @@
 import { Button } from '@/components/animate-ui/components/buttons/button';
 import DashboardPageContainer from '@/components/containers/dashboard-page-container';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { ClassRoomWithMajor, StudyRoom as DefaultStudyRoom, LearningSubject, User } from '@/types';
+import { StudyRoom as DefaultStudyRoom, LearningSubject, User } from '@/types';
+import { ClassRoomWithMajor } from '@/types/model-type';
 import { PageProps as DefaultPageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
 import { List, ScanEyeIcon } from 'lucide-react';
@@ -9,16 +10,22 @@ import { List, ScanEyeIcon } from 'lucide-react';
 interface StudyRoom extends DefaultStudyRoom {
     teacher: User;
     learning_subject: LearningSubject;
-    classroom: ClassRoomWithMajor;
 }
 
 interface PageProps extends DefaultPageProps {
     studyRooms: Array<StudyRoom>;
+    classroom: ClassRoomWithMajor;
 }
 
 const LearningIndex = () => {
-    const { studyRooms } = usePage().props as PageProps;
-    console.log({ studyRooms });
+    const { studyRooms, classroom } = usePage().props as PageProps;
+
+    if (!classroom)
+        return (
+            <DashboardPageContainer>
+                <span className="flex min-h-screen items-center justify-center">Anda belum terdaftar pada kelas, Hubungi Admin/Guru</span>
+            </DashboardPageContainer>
+        );
 
     return (
         <DashboardPageContainer>
@@ -29,7 +36,7 @@ const LearningIndex = () => {
                               <CardHeader className="w-full text-center">
                                   <CardTitle className="">{studyRoom.learning_subject.name}</CardTitle>
                                   <CardDescription>
-                                      {studyRoom.classroom.grade} {studyRoom.classroom.major.name}
+                                      {classroom.grade} {classroom.major.name}
                                   </CardDescription>
                               </CardHeader>
                               <CardContent className="flex w-full flex-col justify-start gap-2 text-sm">

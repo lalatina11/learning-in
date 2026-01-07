@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClassRoom;
 use App\Models\StudyRoom;
 use App\Models\StudyRoomTask;
 use App\Models\StudyRoomTaskSubmission;
@@ -16,15 +17,17 @@ class StudentDashboardController extends Controller
     }
     public function showStudentLearningDashboard()
     {
-        $studyRooms = request()->user()->studyRooms()->with(['classroom.major', 'teacher', 'learning_subject'])->get();
-        return Inertia::render("dashboard/student/learning/index", compact('studyRooms'));
+        $class_room_id = request()->user()->class_room_id;
+        $studyRooms = StudyRoom::where('class_room_id', $class_room_id)->with(['tasks', 'modules', 'teacher', 'learning_subject'])->get();
+        $classroom = ClassRoom::with(['major'])->where('id', $class_room_id)->first();
+        return Inertia::render("dashboard/student/learning/index", compact('studyRooms', 'classroom'));
     }
     public function showStudentLearningDashboardDetails($id)
     {
         $studentId = request()->user()->id;
 
         $studyRoom = StudyRoom::with([
-            'classroom',
+            'classroom.major',
             'teacher',
             'learning_subject',
             'modules',
@@ -37,7 +40,7 @@ class StudentDashboardController extends Controller
             }
         ])->findOrFail($id);
 
-        $studentIds = $studyRoom->students->pluck('id')->toArray();
+        $studentIds = $studyRoom->classroom->students->pluck('id')->toArray();
         $isStudentInTheStudyRoom = in_array(request()->user()->id, $studentIds);
 
         if (!$isStudentInTheStudyRoom) {

@@ -1,5 +1,5 @@
 import { studyRoomTaskSubmissionSchema, StudyRoomTaskSubmissionSchemaType } from '@/lib/form-schema';
-import { StudyRoomTaskSubmissionWithStudent } from '@/types';
+import { TaskSubmissionsWithStudent } from '@/pages/dashboard/teacher/learning/details';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from '@inertiajs/react';
 import { ReactNode, useState } from 'react';
@@ -15,12 +15,12 @@ import { Textarea } from '../ui/textarea';
 interface Props {
     children: ReactNode;
     type: 'taskRating';
-    taskSubmission?: StudyRoomTaskSubmissionWithStudent;
+    taskSubmission?: TaskSubmissionsWithStudent;
 }
 
 interface ActionProps {
     handleCloseDialog: () => void;
-    taskSubmission?: StudyRoomTaskSubmissionWithStudent;
+    taskSubmission?: TaskSubmissionsWithStudent;
 }
 
 export default function TaskSubmissionForm({ children, type, taskSubmission }: Props) {

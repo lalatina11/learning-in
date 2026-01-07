@@ -1,4 +1,5 @@
-import { ClassRoomWithMajor, StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
+import { StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents } from '@/types';
+import { ClassRoom, Major } from '@/types/model-type';
 import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
 import { Edit, ScanEye, Trash } from 'lucide-react';
@@ -9,6 +10,10 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 
 interface Props {
     studyRooms: Array<StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents>;
+}
+
+interface ClassRoomWithMajor extends ClassRoom {
+    major: Major;
 }
 
 const StudyRoomTable = ({ studyRooms }: Props) => {
@@ -32,7 +37,7 @@ const StudyRoomTable = ({ studyRooms }: Props) => {
                     </TableHeader>
                     <TableBody>
                         {studyRooms.map((studyRoom, index) => {
-                            const classRoom = classRooms.find((classRoom) => classRoom.id === studyRoom.classroom.id);
+                            const classRoom = classRooms.find((classRoom) => classRoom.id === studyRoom.class_room.id);
                             return (
                                 <TableRow key={studyRoom.id}>
                                     <TableCell className="font-medium">{index + 1}</TableCell>

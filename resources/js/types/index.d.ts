@@ -53,7 +53,7 @@ export interface ClassRoomWithMajor extends ClassRoom {
 
 export interface StudyRoom extends TimeStamp {
     id: int;
-    classroom_id: int;
+    class_room_id: int;
     teacher_id: int;
     learning_subject_id: number;
 }
@@ -63,19 +63,19 @@ export interface StudyRoomWithTeacher extends StudyRoom {
 }
 
 export interface StudyRoomWithClassRoom extends StudyRoom {
-    classroom: ClassRoom;
+    class_room: ClassRoom;
 }
 export interface StudyRoomWithStudent extends StudyRoom {
-    classroom: ClassRoom;
+    class_room: ClassRoom;
 }
 
 export interface StudyRoomWithClassRoomAndTeacher extends StudyRoom {
-    classroom: ClassRoom;
+    class_room: ClassRoom;
     teacher: User;
 }
 
 export interface StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubject extends StudyRoom {
-    classroom: ClassRoomWithMajor;
+    class_room: ClassRoomWithMajor;
     teacher: User;
     learning_subject: LearningSubject;
 }
@@ -87,7 +87,7 @@ export interface StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndSt
 }
 
 export interface StudyRoomWithClassRoomAndTeacherAndTeacher extends StudyRoom {
-    classroom: ClassRoomWithMajor;
+    class_room: ClassRoomWithMajor;
     teacher: User;
     students: Array<User>;
 }

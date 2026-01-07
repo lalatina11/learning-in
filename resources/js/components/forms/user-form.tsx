@@ -229,13 +229,13 @@ function Update({ user, handleCloseSheet }: ActionProps) {
                 const errorMessage = err.server[0] || 'Terjadi kesalahan';
                 form.setError('root', { message: errorMessage });
 
-                toast.error(`Gagal Menghapus Pengguna`, {
+                toast.error(`Gagal Mengubah data Pengguna`, {
                     description: errorMessage,
                     action: { label: 'OK', onClick: () => {} },
                 });
             },
             onSuccess: () => {
-                toast.success(`Berhasil Menghapus Pengguna`, {
+                toast.success(`Berhasil Mengubah data Pengguna`, {
                     action: { label: 'OK', onClick: () => {} },
                 });
                 handleCloseSheet();
@@ -369,13 +369,13 @@ function Delete({ handleCloseSheet, user }: ActionProps) {
             onFinish: () => setIsLoading(false),
             onError: (err: any) => {
                 const errorMessage = err.server[0] || 'Terjadi kesalahan';
-                toast.error(`Gagal Mengedit Pengguna`, {
+                toast.error(`Gagal menghapus data Pengguna`, {
                     description: errorMessage,
                     action: { label: 'OK', onClick: () => {} },
                 });
             },
             onSuccess: () => {
-                toast.success(`Berhasil Mengedit Pengguna`, {
+                toast.success(`Berhasil menghapus data Pengguna`, {
                     action: { label: 'OK', onClick: () => {} },
                 });
                 handleCloseSheet();

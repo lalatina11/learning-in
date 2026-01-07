@@ -4,10 +4,13 @@ import { StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents }
 import { PageProps } from '@/types/page-props';
 import { usePage } from '@inertiajs/react';
 
-export type StudyRoom = StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents;
+type StudyRoomDetail = StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents;
 
 const Learning = () => {
-    const props = usePage().props as PageProps & { studyRooms: Array<StudyRoom> };
+    const { studyRooms } = usePage().props as PageProps & {
+        studyRooms: Array<StudyRoomDetail>;
+    };
+    console.log(studyRooms);
 
     return (
         <DashboardPageContainer>

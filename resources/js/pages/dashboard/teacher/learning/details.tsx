@@ -7,27 +7,40 @@ import StudyRoomTaskTable from '@/components/teacher-components/study-room-task-
 import StudyRoomWithTaskSubmissions from '@/components/teacher-components/study-room-tasks-with-submissions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-    StudyRoomModule,
-    StudyRoomTaskWithSubmissionAndStudent,
-    StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents,
-} from '@/types';
+import { Major } from '@/types';
+import { ClassRoom, LearningSubject, StudyRoom, StudyRoomTask, StudyRoomTaskSubmission, User } from '@/types/model-type';
 import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
 import { ArrowLeft, Eye, EyeOff, Plus } from 'lucide-react';
 import { useState } from 'react';
 
-export interface StudyRoom extends StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents {
-    modules: Array<StudyRoomModule>;
-    tasks: Array<StudyRoomTaskWithSubmissionAndStudent>;
+interface ClassRoomDetail extends ClassRoom {
+    students: Array<User>;
+    major: Major;
+}
+
+export interface TaskSubmissionsWithStudent extends StudyRoomTaskSubmission {
+    student: User;
+}
+
+export interface TaskWithSubmission extends StudyRoomTask {
+    task_submissions: Array<TaskSubmissionsWithStudent>;
+}
+
+interface StudyRoomDetail extends StudyRoom {
+    classroom: ClassRoomDetail;
+    learning_subject: LearningSubject;
+    teacher: User;
+    tasks: Array<TaskWithSubmission>;
 }
 
 interface Props extends PageProps {
-    studyRoom: StudyRoom;
+    studyRoom: StudyRoomDetail;
 }
 
 const Details = () => {
     const { studyRoom } = usePage().props as Props;
+    console.log(studyRoom);
 
     const [isShowStudentsTable, setIsShowStudentsTable] = useState(false);
 
@@ -71,7 +84,7 @@ const Details = () => {
                             </span>
                             <span className="flex flex-1">
                                 <span className="flex-1/3 sm:flex-1/2 md:flex-2/8 lg:flex-1/8">Jumlah Siswa</span>
-                                <span className="flex-2/3 sm:flex-1/2 md:flex-6/8 lg:flex-7/8">: {studyRoom.students.length}</span>
+                                <span className="flex-2/3 sm:flex-1/2 md:flex-6/8 lg:flex-7/8">: {studyRoom.classroom.students.length}</span>
                             </span>
                         </CardDescription>
                     </CardHeader>
@@ -80,13 +93,13 @@ const Details = () => {
                             <Button onClick={handleSwitchStudentTableVisibility}>
                                 {isShowStudentsTable ? <EyeOff /> : <Eye />}
                                 <span>
-                                    <span className="hidden sm:inline">{isShowStudentsTable ? 'Sembunyikan' : 'Lihat'}</span> Murid
+                                    <span className="hidden sm:inline">{isShowStudentsTable ? 'Sembunyikan' : 'Lihat'}</span> Siswa
                                 </span>
                             </Button>
                         </div>
                         {isShowStudentsTable && (
                             <div>
-                                <StudentTable users={studyRoom.students} studyRoomId={studyRoom.id} />
+                                <StudentTable users={studyRoom.classroom.students} classRoomId={studyRoom.class_room_id} params="studyroom" />
                             </div>
                         )}
                     </CardContent>

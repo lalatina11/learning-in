@@ -37,6 +37,10 @@ Route::middleware(['auth.middleware'])->group(function () {
                     Route::post('/', [AdminDashboardController::class, 'createClassroom'])->name('dashboard.admin.manage.school.create.class-room');
                     Route::patch('/{id}', [AdminDashboardController::class, 'updateClassRoom'])->name('dashboard.admin.manage.school.update.class-room');
                     Route::delete('/{id}', [AdminDashboardController::class, 'deleteClassRoom'])->name('dashboard.admin.manage.school.delete.class-room');
+                    Route::get('/{id}', [AdminDashboardController::class, 'showClassRoomDetail'])->name('dashboard.admin.manage.school.classroom-detail');
+                    Route::patch('/{id}/add-student', [AdminDashboardController::class, 'addStudentToTheClassroom'])->name('dashboard.admin.manage.school.update.class-room.add-student');
+                    Route::patch('/{id}/change-student/{userId}', [AdminDashboardController::class, 'changeStudentInTheClassRoom'])->name('dashboard.admin.manage.school.update.class-room.change-student');
+                    Route::delete('/{id}/delete-student/{userId}', [AdminDashboardController::class, 'deleteStudentInTheClassRoom'])->name('dashboard.admin.manage.school.update.class-room.delete-student');
                 });
                 Route::prefix('/learning-subjects')->group(function () {
                     Route::post('/', [AdminDashboardController::class, 'createLearningSubject'])->name('dashboard.admin.manage.school.create.learning-subject');
@@ -48,9 +52,6 @@ Route::middleware(['auth.middleware'])->group(function () {
                     Route::patch('/{id}', [AdminDashboardController::class, 'updateStudyRoom'])->name('dashboard.admin.manage.school.update.study-room');
                     Route::delete('/{id}', [AdminDashboardController::class, 'deleteStudyRoom'])->name('dashboard.admin.manage.school.delete.study-room');
                     Route::get('/{id}/details', [AdminDashboardController::class, 'showStudyRoomDetail'])->name('dashboard.admin.manage.school.update.study-room.show-details');
-                    Route::patch('/{id}/add-student', [AdminDashboardController::class, 'addStudentOnStudyRoom'])->name('dashboard.admin.manage.school.update.study-room.add-student');
-                    Route::patch('/{id}/change-student/{userId}', [AdminDashboardController::class, 'changeStudentOnStudyRoom'])->name('dashboard.admin.manage.school.update.study-room.change-student');
-                    Route::delete('/{id}/delete-student/{userId}', [AdminDashboardController::class, 'deleteStudentOnStudyRoom'])->name('dashboard.admin.manage.school.update.study-room.delete-student');
                 });
             });
         });

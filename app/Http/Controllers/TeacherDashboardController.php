@@ -18,12 +18,12 @@ class TeacherDashboardController extends Controller
     }
     public function showLearningDashboard()
     {
-        $studyRooms = StudyRoom::where('teacher_id', request()->user()->id)->with('classroom')->with('learning_subject')->get();
+        $studyRooms = StudyRoom::where('teacher_id', request()->user()->id)->with(['classroom.major', 'teacher', 'learning_subject'])->get();
         return Inertia::render("dashboard/teacher/learning/index", compact("studyRooms"));
     }
     public function showLearningDashboardDetails($id)
     {
-        $studyRoom = StudyRoom::where('teacher_id', request()->user()->id)->with(['classroom', 'teacher', 'students', 'learning_subject', 'modules', 'tasks.taskSubmissions.student'])->findOrFail($id);
+        $studyRoom = StudyRoom::where('teacher_id', request()->user()->id)->with(['classroom.major', 'classroom.students', 'teacher', 'learning_subject', 'modules', 'tasks.taskSubmissions.student'])->findOrFail($id);
         return Inertia::render("dashboard/teacher/learning/details", compact("studyRoom"));
     }
 

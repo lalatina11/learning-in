@@ -60,20 +60,20 @@ const StudyRoomTaskTable = () => {
                                 {isTeacher && (
                                     <>
                                         <StudyRoomTaskForm type="update" task={task}>
-                                            <Button className="flex-1">
+                                            <Button>
                                                 <Edit />
                                                 <span className="hidden md:inline">Update</span>
                                             </Button>
                                         </StudyRoomTaskForm>
 
                                         <StudyRoomTaskForm type="delete" task={task}>
-                                            <Button className="flex-1" variant={'destructive'}>
+                                            <Button variant={'destructive'}>
                                                 <Trash />
                                                 <span className="hidden md:inline">Delete</span>
                                             </Button>
                                         </StudyRoomTaskForm>
                                         <StudyRoomTaskForm type="switchClosed" task={task}>
-                                            <Button className="flex-1" variant={task.is_closed ? 'default' : 'destructive'}>
+                                            <Button variant={task.is_closed ? 'default' : 'destructive'}>
                                                 {task.is_closed ? <LockOpen /> : <Lock />}
                                                 <span className="hidden md:inline">{task.is_closed ? 'Buka' : 'Tutup'}</span>
                                             </Button>

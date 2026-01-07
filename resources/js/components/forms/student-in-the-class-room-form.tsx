@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LearningSubjectSchemaType, studentInTheStudyRoomSchema, StudentInTheStudyRoomSchemaType } from '@/lib/form-schema';
-import { User } from '@/types';
+import { User } from '@/types/model-type';
 import { PageProps } from '@/types/page-props';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router, usePage } from '@inertiajs/react';
@@ -14,17 +15,17 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 interface Props {
     children: ReactNode;
     type: 'create' | 'update' | 'delete';
-    studyRoomId: number;
+    classRoomId: number;
     user?: User;
 }
 
 interface ActionProps {
     handleCloseDialog: () => void;
-    studyRoomId: number;
+    classRoomId: number;
     user?: User;
 }
 
-export default function StudentInTheStudyRoomForm({ children, type, studyRoomId, user }: Props) {
+export default function StudentInTheClassRoom({ children, type, classRoomId, user }: Props) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     function handleCloseDialog() {
@@ -35,17 +36,17 @@ export default function StudentInTheStudyRoomForm({ children, type, studyRoomId,
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             {type === 'create' ? (
-                <Create handleCloseDialog={handleCloseDialog} studyRoomId={studyRoomId} />
+                <Create handleCloseDialog={handleCloseDialog} classRoomId={classRoomId} />
             ) : type === 'update' ? (
-                <Update handleCloseDialog={handleCloseDialog} studyRoomId={studyRoomId} user={user} />
+                <Update handleCloseDialog={handleCloseDialog} classRoomId={classRoomId} user={user} />
             ) : (
-                <Delete handleCloseDialog={handleCloseDialog} studyRoomId={studyRoomId} user={user} />
+                <Delete handleCloseDialog={handleCloseDialog} classRoomId={classRoomId} user={user} />
             )}
         </Dialog>
     );
 }
 
-function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
+function Create({ handleCloseDialog, classRoomId }: ActionProps) {
     const { studentList } = usePage().props as PageProps & { studentList: Array<User> };
     const [isLoading, setIsLoading] = useState(false);
     const form = useForm({
@@ -78,7 +79,7 @@ function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
                 handleCloseDialog();
             },
         };
-        router.patch(`/dashboard/admin/school/study-room/${studyRoomId}/add-student`, values, requestOptions);
+        router.patch(`/dashboard/admin/school/class-room/${classRoomId}/add-student`, values, requestOptions);
     }
 
     const isFormBusy = isLoading || form.formState.isLoading || form.formState.isSubmitting;
@@ -86,8 +87,8 @@ function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
     return (
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Tambahkan Murid</DialogTitle>
-                <DialogDescription>Tambahkan Murid di KBM ini</DialogDescription>
+                <DialogTitle>Tambahkan Siswa</DialogTitle>
+                <DialogDescription>Tambahkan Siswa di KBM ini</DialogDescription>
             </DialogHeader>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
                 <FieldGroup>
@@ -97,21 +98,25 @@ function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
                         name="user_id"
                         render={({ field, fieldState }) => (
                             <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel htmlFor={field.name}>Pilih Murid</FieldLabel>
-                                <Select onValueChange={(val) => form.setValue('user_id', val as LearningSubjectSchemaType['type'])}>
-                                    <SelectTrigger className="w-[180px]">
-                                        <SelectValue placeholder={'Pilih Murid'} />
-                                    </SelectTrigger>
-                                    <SelectContent aria-invalid={fieldState.invalid}>
-                                        <SelectGroup>
-                                            {studentList.map((student) => (
-                                                <SelectItem key={student.id} value={student.id.toString()}>
-                                                    {`${student.master_number} | ${student.name}`}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
+                                <FieldLabel htmlFor={field.name}>Pilih Siswa</FieldLabel>
+                                {studentList.length > 0 ? (
+                                    <Select onValueChange={(val) => form.setValue('user_id', val as LearningSubjectSchemaType['type'])}>
+                                        <SelectTrigger className="w-[180px]">
+                                            <SelectValue placeholder={'Pilih Siswa'} />
+                                        </SelectTrigger>
+                                        <SelectContent aria-invalid={fieldState.invalid}>
+                                            <SelectGroup>
+                                                {studentList.map((student) => (
+                                                    <SelectItem key={student.id} value={student.id.toString()}>
+                                                        {`${student.master_number} | ${student.name}`}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                ) : (
+                                    <span>Error: Data Siswa Belum ada, silahkan input Data Siswa terlebih dahulu</span>
+                                )}
                                 <FieldError errors={[fieldState.error]} />
                             </Field>
                         )}
@@ -129,7 +134,7 @@ function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
         </DialogContent>
     );
 }
-function Update({ handleCloseDialog, studyRoomId, user }: ActionProps) {
+function Update({ handleCloseDialog, classRoomId, user }: ActionProps) {
     const { studentList } = usePage().props as PageProps & { studentList: Array<User> };
 
     const [isLoading, setIsLoading] = useState(false);
@@ -165,15 +170,15 @@ function Update({ handleCloseDialog, studyRoomId, user }: ActionProps) {
                 handleCloseDialog();
             },
         };
-        router.patch(`/dashboard/admin/school/study-room/${studyRoomId}/change-student/${user?.id}`, values, requestOptions);
+        router.patch(`/dashboard/admin/school/class-room/${classRoomId}/change-student/${user?.id}`, values, requestOptions);
     }
 
     const isFormBusy = isLoading || form.formState.isLoading || form.formState.isSubmitting;
     return (
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Ganti Murid</DialogTitle>
-                <DialogDescription>Ganti Murid di KBM ini</DialogDescription>
+                <DialogTitle>Ganti Siswa</DialogTitle>
+                <DialogDescription>Ganti Siswa di KBM ini</DialogDescription>
             </DialogHeader>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
                 <FieldGroup>
@@ -183,13 +188,13 @@ function Update({ handleCloseDialog, studyRoomId, user }: ActionProps) {
                         name="user_id"
                         render={({ field, fieldState }) => (
                             <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel htmlFor={field.name}>Pilih Murid</FieldLabel>
+                                <FieldLabel htmlFor={field.name}>Pilih Siswa</FieldLabel>
                                 <Select
                                     defaultValue={Number(field.value).toString()}
                                     onValueChange={(val) => form.setValue('user_id', val as LearningSubjectSchemaType['type'])}
                                 >
                                     <SelectTrigger className="w-[180px]">
-                                        <SelectValue placeholder={studentList.find((student) => student.id === field.value)?.name || 'Pilih Murid'} />
+                                        <SelectValue placeholder={studentList.find((student) => student.id === field.value)?.name || 'Pilih Siswa'} />
                                     </SelectTrigger>
                                     <SelectContent aria-invalid={fieldState.invalid}>
                                         <SelectGroup>
@@ -219,7 +224,7 @@ function Update({ handleCloseDialog, studyRoomId, user }: ActionProps) {
     );
 }
 
-function Delete({ studyRoomId, user, handleCloseDialog }: ActionProps) {
+function Delete({ classRoomId, user, handleCloseDialog }: ActionProps) {
     const [isLoading, setIsLoading] = useState(false);
 
     function handleDelete() {
@@ -243,7 +248,7 @@ function Delete({ studyRoomId, user, handleCloseDialog }: ActionProps) {
                 handleCloseDialog();
             },
         };
-        router.delete(`/dashboard/admin/school/study-room/${studyRoomId}/delete-student/${user?.id}`, requestOptions);
+        router.delete(`/dashboard/admin/school/class-room/${classRoomId}/delete-student/${user?.id}`, requestOptions);
     }
 
     const isButtonBusy = isLoading;

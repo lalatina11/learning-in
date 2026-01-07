@@ -1,4 +1,4 @@
-import { StudyRoomTaskSubmissionWithStudent, StudyRoomTaskWithSubmissionAndStudent } from '@/types';
+import { TaskSubmissionsWithStudent, TaskWithSubmission } from '@/pages/dashboard/teacher/learning/details';
 import { Copy, Pen } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '../animate-ui/components/buttons/button';
@@ -9,16 +9,16 @@ import { Card, CardContent } from '../ui/card';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
 interface Props {
-    tasks: Array<StudyRoomTaskWithSubmissionAndStudent>;
+    tasks: Array<TaskWithSubmission>;
 }
 
 interface AccordionProps {
-    task: StudyRoomTaskWithSubmissionAndStudent;
+    task: TaskWithSubmission;
     no: number;
 }
 
 interface TableProps {
-    submission: Array<StudyRoomTaskSubmissionWithStudent>;
+    submission: Array<TaskSubmissionsWithStudent>;
 }
 
 export default function StudyRoomWithTaskSubmissions({ tasks }: Props) {

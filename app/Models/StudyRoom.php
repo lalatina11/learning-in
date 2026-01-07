@@ -6,25 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class StudyRoom extends Model
 {
-    protected $fillable = ['teacher_id', 'classroom_id', 'learning_subject_id'];
+    protected $fillable = ['teacher_id', 'class_room_id', 'learning_subject_id'];
 
     public function teacher()
     {
         return $this->belongsTo(User::class, 'teacher_id');
     }
-    public function classroom()
+    public function classRoom()
     {
-        return $this->belongsTo(ClassRoom::class, 'classroom_id')->with('major');
-    }
-
-    public function students()
-    {
-        return $this->belongsToMany(User::class, 'student_in_the_study_room', 'study_room_id', 'student_id')->withTimestamps();
-    }
-
-    public function studentsCount()
-    {
-        return $this->students()->count();
+        return $this->belongsTo(ClassRoom::class, 'class_room_id');
     }
 
     public function learning_subject()
