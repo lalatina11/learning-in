@@ -84,7 +84,7 @@ const Welcome = () => {
                     <Card className="w-3xl">
                         <CardHeader>
                             <CardTitle>Potret Anggota</CardTitle>
-                            <CardDescription>Anggota Kelompok 5 Web Programming II</CardDescription>
+                            <CardDescription>Anggota Kelompok 2 Web Programming II</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <GroupMembers />
