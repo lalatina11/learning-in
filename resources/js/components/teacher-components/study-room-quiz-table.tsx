@@ -30,7 +30,7 @@ const StudyRoomQuizTable = () => {
 
     return (
         <Table className="w-full">
-            <TableCaption>Semua data Tugas KBM sudah dimuat.</TableCaption>
+            <TableCaption>{quizzes.length > 0 ? 'Semua data Quiz sudah dimuat.' : 'Belum ada Quiz.'}</TableCaption>
             <TableHeader>
                 <TableRow>
                     <TableHead className="w-[100px]">#</TableHead>

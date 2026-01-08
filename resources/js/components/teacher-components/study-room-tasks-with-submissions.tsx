@@ -55,7 +55,9 @@ function StudyRoomTaskSubmissionAccordion({ task, no }: AccordionProps) {
 function TaskSubmissionTable({ submission }: TableProps) {
     return (
         <Table>
-            <TableCaption>Semua data pekerjaan tugas telah dimuat.</TableCaption>
+            <TableCaption>
+                {submission.length > 0 ? 'Semua data pekerjaan tugas telah dimuat.' : 'Belum ada Siswa yang mengunggah tugas'}
+            </TableCaption>
             <TableHeader>
                 <TableRow>
                     <TableHead>#</TableHead>

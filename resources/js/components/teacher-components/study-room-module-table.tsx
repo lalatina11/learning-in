@@ -34,7 +34,7 @@ const StudyRoomModuleTable = () => {
 
     return (
         <Table className="w-full">
-            <TableCaption>Semua data Module KBM sudah dimuat.</TableCaption>
+            <TableCaption>{modules.length > 0 ? 'Semua data Module KBM sudah dimuat.' : 'Belum ada module KBM yang dibuat.'}</TableCaption>
             <TableHeader>
                 <TableRow>
                     <TableHead className="w-[100px]">#</TableHead>
