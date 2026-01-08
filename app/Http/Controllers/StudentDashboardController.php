@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ClassRoom;
 use App\Models\StudyRoom;
+use App\Models\StudyRoomQuizzez;
 use App\Models\StudyRoomTask;
 use App\Models\StudyRoomTaskSubmission;
 use Illuminate\Http\Request;
@@ -34,6 +35,13 @@ class StudentDashboardController extends Controller
             'tasks' => function ($query) use ($studentId) {
                 $query->with([
                     'taskSubmissions' => function ($q) use ($studentId) {
+                        $q->where('student_id', $studentId);
+                    }
+                ]);
+            },
+            'quizzes' => function ($query) use ($studentId) {
+                $query->with([
+                    'ratings' => function ($q) use ($studentId) {
                         $q->where('student_id', $studentId);
                     }
                 ]);
@@ -85,5 +93,6 @@ class StudentDashboardController extends Controller
         }
         return redirect()->back();
     }
+
 
 }

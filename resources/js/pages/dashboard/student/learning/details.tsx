@@ -1,4 +1,5 @@
 import DashboardPageContainer from '@/components/containers/dashboard-page-container';
+import QuizTable from '@/components/student-components/quiz-table';
 import TaskSubmissionTable from '@/components/student-components/task-submission-table';
 import StudyRoomModuleTable from '@/components/teacher-components/study-room-module-table';
 import StudyRoomTaskTable from '@/components/teacher-components/study-room-task-table';
@@ -9,6 +10,7 @@ import {
     StudyRoomTaskWithSubmissionAndStudent,
     StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents,
 } from '@/types';
+import { QuizWithRatingsAndStudent } from '@/types/model-type';
 import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
@@ -16,6 +18,7 @@ import { ArrowLeft } from 'lucide-react';
 export interface StudyRoom extends StudyRoomWithClassRoomAndTeacherAndMajorAndLearningSubjectAndStudents {
     modules: Array<StudyRoomModule>;
     tasks: Array<StudyRoomTaskWithSubmissionAndStudent>;
+    quizzes: Array<QuizWithRatingsAndStudent>;
 }
 
 interface Props extends PageProps {
@@ -23,8 +26,8 @@ interface Props extends PageProps {
 }
 
 const Details = () => {
-    const { studyRoom } = usePage().props as Props;
-    console.log(studyRoom);
+    const { studyRoom, auth } = usePage().props as Props;
+    console.log({ quizzes: studyRoom.quizzes, userId: auth?.user?.id });
 
     return (
         <DashboardPageContainer>
@@ -79,6 +82,18 @@ const Details = () => {
                     <div className="mt-3 flex flex-col gap-3">
                         <h1 className="text-lg font-semibold">Daftar Pengerjaan Tugas</h1>
                         <TaskSubmissionTable tasks={studyRoom.tasks} />
+                    </div>
+                </div>
+                <div id="task-submissions">
+                    <div className="mt-3 flex flex-col gap-3">
+                        <h1 className="text-lg font-semibold">Daftar Quiz</h1>
+                        <TaskSubmissionTable tasks={studyRoom.tasks} />
+                    </div>
+                </div>
+                <div id="task-submissions">
+                    <div className="mt-3 flex flex-col gap-3">
+                        <h1 className="text-lg font-semibold">Daftar Penilaian Quiz</h1>
+                        <QuizTable quizzes={studyRoom.quizzes} />
                     </div>
                 </div>
             </div>
