@@ -74,6 +74,13 @@ Route::middleware(['auth.middleware'])->group(function () {
                 Route::prefix('/tasks-submission')->group(function () {
                     Route::post('/{id}/rating-task-submission', [TeacherDashboardController::class, 'ratingTaskSubmission'])->name('teacher.learning.task-submission.rating-task-submission');
                 });
+                Route::prefix('/quizzes')->group(function () {
+                    Route::post('/{studyRoomId}/create-quiz', [TeacherDashboardController::class, 'createQuiz'])->name('dashboard.teacher.learning.details.create-quiz');
+                    Route::patch('/{id}/update-quiz', [TeacherDashboardController::class, 'updateQuiz'])->name('dashboard.teacher.learning.update-quiz');
+                    Route::delete('/{id}/delete-quiz', [TeacherDashboardController::class, 'deleteQuiz'])->name('dashboard.teacher.learning.delete-quiz');
+                    Route::patch('/{id}/switch-quiz-status', [TeacherDashboardController::class, 'switchQuizStatus'])->name('dashboard.teacher.learning.switch-quiz');
+                    Route::patch('/{id}/{studentId}/rating-quiz', [TeacherDashboardController::class, 'quizRatingForStudent'])->name('dashboard.teacher.learning.rating-quiz');
+                });
             });
         });
         Route::middleware(['student.middleware'])->group(function () {

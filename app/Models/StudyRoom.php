@@ -30,4 +30,9 @@ class StudyRoom extends Model
     {
         return $this->hasMany(StudyRoomTask::class);
     }
+
+    public function quizzes()
+    {
+        return $this->hasMany(StudyRoomQuizzez::class, 'study_room_id');
+    }
 }

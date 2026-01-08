@@ -88,7 +88,19 @@ export type StudyRoomTaskSchemaType = z.infer<typeof studyRoomTaskSchema>;
 export const studyRoomTaskSubmissionSchema = z.object({
     url: z.string().min(5, 'Minimal 5 karakter').optional(),
     teacher_note: z.string().optional(),
-    rate: z.coerce.number().optional(),
+    rate: z.coerce.number().min(0).max(100, 'Nilai tidak boleh lebih dari 100').optional(),
 });
 
 export type StudyRoomTaskSubmissionSchemaType = z.infer<typeof studyRoomTaskSubmissionSchema>;
+
+export const quizSchema = z.object({
+    platform: z.string().min(5, 'Minimal 5 karakter').optional(),
+    join_code: z.string().min(5, 'Minimal 5 karakter').optional(),
+});
+
+export type QuizSchemaType = z.infer<typeof quizSchema>;
+
+export const quizRatingSchema = z.object({
+    rate: z.coerce.number().min(0).max(100, 'Nilai tidak boleh lebih dari 100').optional(),
+});
+export type QuizRatingSchemaType = z.infer<typeof quizRatingSchema>;

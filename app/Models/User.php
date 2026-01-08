@@ -91,4 +91,9 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function quiz_ratings()
+    {
+        return $this->hasMany(QuizRating::class, 'student_id');
+    }
+
 }

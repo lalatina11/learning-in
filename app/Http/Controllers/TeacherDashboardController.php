@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\QuizRating;
 use App\Models\StudyRoom;
 use App\Models\StudyRoomModule;
+use App\Models\StudyRoomQuizzez;
 use App\Models\StudyRoomTask;
 use App\Models\StudyRoomTaskSubmission;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -23,7 +26,7 @@ class TeacherDashboardController extends Controller
     }
     public function showLearningDashboardDetails($id)
     {
-        $studyRoom = StudyRoom::where('teacher_id', request()->user()->id)->with(['classroom.major', 'classroom.students', 'teacher', 'learning_subject', 'modules', 'tasks.taskSubmissions.student'])->findOrFail($id);
+        $studyRoom = StudyRoom::where('teacher_id', request()->user()->id)->with(['classroom.major', 'classroom.students', 'teacher', 'learning_subject', 'modules', 'tasks.taskSubmissions.student', 'quizzes.ratings.student'])->findOrFail($id);
         return Inertia::render("dashboard/teacher/learning/details", compact("studyRoom"));
     }
 
@@ -211,6 +214,97 @@ class TeacherDashboardController extends Controller
         }
         $validated['is_rated'] = true;
         $studyRoomTaskSubmission->update($validated);
+        return redirect()->back();
+    }
+
+    public function createQuiz($studyRoomId, Request $request)
+    {
+        $validated = $request->validate([
+            'platform' => ['string', 'min:1'],
+            'join_code' => ['string', 'min:1'],
+        ]);
+
+        $studyRoom = StudyRoom::findOrFail($studyRoomId);
+        if (!$studyRoom) {
+            return redirect()->back()->withErrors('KBM Tidak valid', 'server');
+        }
+        $quiz = StudyRoomQuizzez::create([
+            'study_room_id' => $studyRoom->id,
+            'platform' => $validated['platform'],
+            'join_code' => $validated['join_code'],
+        ])->first();
+
+        $students = User::where('role', "STUDENT")->where('class_room_id', $studyRoom->class_room_id)->get();
+        foreach ($students as $student) {
+            QuizRating::create([
+                'student_id' => $student->id,
+                'quiz_id' => $quiz->id,
+            ]);
+        }
+        return redirect()->back();
+    }
+    public function updateQuiz($id, Request $request)
+    {
+        $validated = $request->validate([
+            'platform' => ['nullable', 'string', 'min:1'],
+            'join_code' => ['nullable', 'string', 'min:1'],
+        ]);
+
+        $quiz = StudyRoomQuizzez::findOrFail($id);
+        if (!$quiz) {
+            return redirect()->back()->withErrors('Quiz Tidak valid', 'server');
+        }
+        $quiz->update([
+            'platform' => $validated['platform'] ?? $quiz->platform,
+            'join_code' => $validated['join_code'] ?? $quiz->join_code,
+        ]);
+
+        return redirect()->back();
+    }
+    public function deleteQuiz($id)
+    {
+        $quiz = StudyRoomQuizzez::findOrFail($id);
+        if (!$quiz) {
+            return redirect()->back()->withErrors('Quiz Tidak valid', 'server');
+        }
+        $quiz->delete();
+
+        return redirect()->back();
+    }
+    public function switchQuizStatus($id)
+    {
+        $quiz = StudyRoomQuizzez::findOrFail($id);
+        if (!$quiz) {
+            return redirect()->back()->withErrors('Quiz Tidak valid', 'server');
+        }
+        $quiz->update(['is_open' => !$quiz->is_open]);
+
+        return redirect()->back();
+    }
+    public function quizRatingForStudent($id, $studentId, Request $request)
+    {
+        $validated = $request->validate([
+            'rate' => ['integer'],
+            'teacher_note' => ['nullable', 'string'],
+        ]);
+
+        $quizRating = QuizRating::where('student_id', $studentId)->findOrFail($id);
+
+        if (!$quizRating) {
+            return redirect()->back()->withErrors('Quiz Tidak valid', 'server');
+        }
+
+        if (!$quizRating->is_rated) {
+            $quizRating->update([
+                'is_rated' => true,
+            ]);
+        }
+
+        $quizRating->update([
+            'rate' => $validated['rate'],
+            'teacher_note' => $validated['teacher_note'] ?? $quizRating->teacher_note,
+        ]);
+
         return redirect()->back();
     }
 }

@@ -38,7 +38,7 @@ const StudyRoomTaskTable = () => {
 
     return (
         <Table className="w-full">
-            <TableCaption>Semua data Module KBM sudah dimuat.</TableCaption>
+            <TableCaption>Semua data Tugas KBM sudah dimuat.</TableCaption>
             <TableHeader>
                 <TableRow>
                     <TableHead className="w-[100px]">#</TableHead>

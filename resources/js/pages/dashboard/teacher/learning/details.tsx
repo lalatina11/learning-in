@@ -1,14 +1,17 @@
 import StudentTable from '@/components/admin-components/student-table';
 import DashboardPageContainer from '@/components/containers/dashboard-page-container';
 import StudyRoomModuleForm from '@/components/forms/study-room-module-form';
+import StudyRoomQuizForm from '@/components/forms/study-room-quiz-form';
 import StudyRoomTaskForm from '@/components/forms/study-room-task-form';
 import StudyRoomModuleTable from '@/components/teacher-components/study-room-module-table';
+import StudyRoomQuizTable from '@/components/teacher-components/study-room-quiz-table';
+import StudyRoomQuizWithRatings from '@/components/teacher-components/study-room-quiz-with-ratings';
 import StudyRoomTaskTable from '@/components/teacher-components/study-room-task-table';
 import StudyRoomWithTaskSubmissions from '@/components/teacher-components/study-room-tasks-with-submissions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Major } from '@/types';
-import { ClassRoom, LearningSubject, StudyRoom, StudyRoomTask, StudyRoomTaskSubmission, User } from '@/types/model-type';
+import { ClassRoom, LearningSubject, QuizWithRatingsAndStudent, StudyRoom, StudyRoomTask, StudyRoomTaskSubmission, User } from '@/types/model-type';
 import { PageProps } from '@/types/page-props';
 import { Link, usePage } from '@inertiajs/react';
 import { ArrowLeft, Eye, EyeOff, Plus } from 'lucide-react';
@@ -32,6 +35,7 @@ interface StudyRoomDetail extends StudyRoom {
     learning_subject: LearningSubject;
     teacher: User;
     tasks: Array<TaskWithSubmission>;
+    quizzes: Array<QuizWithRatingsAndStudent>;
 }
 
 interface Props extends PageProps {
@@ -139,6 +143,27 @@ const Details = () => {
                         <h1 className="text-lg font-semibold">Daftar Pengerjaan Tugas</h1>
                         <div className="flex items-center gap-2"></div>
                         <StudyRoomWithTaskSubmissions tasks={studyRoom.tasks} />
+                    </div>
+                </div>
+                <div>
+                    <div className="mt-3 flex flex-col gap-3">
+                        <h1 className="text-lg font-semibold">Daftar Quiz</h1>
+                        <div className="flex items-center gap-2">
+                            <StudyRoomQuizForm type="create" studyRoomId={studyRoom.id}>
+                                <Button>
+                                    <Plus />
+                                    <span>
+                                        <span className="hidden sm:inline">Tambah</span> Quiz
+                                    </span>
+                                </Button>
+                            </StudyRoomQuizForm>
+                        </div>
+                        <StudyRoomQuizTable />
+                    </div>
+                    <div className="mt-3 flex flex-col gap-3">
+                        <h1 className="text-lg font-semibold">Daftar Penilaian Quiz</h1>
+                        <div className="flex items-center gap-2"></div>
+                        <StudyRoomQuizWithRatings quizzes={studyRoom.quizzes} />
                     </div>
                 </div>
             </div>

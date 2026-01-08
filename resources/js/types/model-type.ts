@@ -66,3 +66,23 @@ export interface StudyRoomTask extends TimeStamp {
 export interface ClassRoomWithMajor extends ClassRoom {
     major: Major;
 }
+
+export interface Quiz extends TimeStampAndId {
+    study_room_id: number;
+    platform: string;
+    join_code: string;
+    is_open: boolean;
+}
+
+export interface QuizRating extends TimeStampAndId {
+    quiz_id: string;
+    is_rated: boolean;
+    rate: number;
+    student_id: number;
+    teacher_note: string;
+    student: User;
+}
+
+export interface QuizWithRatingsAndStudent extends Quiz {
+    ratings: Array<QuizRating>;
+}

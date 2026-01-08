@@ -1,5 +1,5 @@
 import { studyRoomTaskSubmissionSchema, StudyRoomTaskSubmissionSchemaType } from '@/lib/form-schema';
-import { TaskSubmissionsWithStudent } from '@/pages/dashboard/teacher/learning/details';
+import { QuizRating as QuizRatingType } from '@/types/model-type';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from '@inertiajs/react';
 import { ReactNode, useState } from 'react';
@@ -14,16 +14,16 @@ import { Textarea } from '../ui/textarea';
 
 interface Props {
     children: ReactNode;
-    type: 'taskRating';
-    taskSubmission?: TaskSubmissionsWithStudent;
+    type: 'quizRating';
+    quizRating?: QuizRatingType;
 }
 
 interface ActionProps {
     handleCloseDialog: () => void;
-    taskSubmission?: TaskSubmissionsWithStudent;
+    quizRating?: QuizRatingType;
 }
 
-export default function TaskSubmissionForm({ children, type, taskSubmission }: Props) {
+export default function QuizSubmissionForm({ children, type, quizRating }: Props) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     function handleCloseDialog() {
         setIsDialogOpen(false);
@@ -32,16 +32,16 @@ export default function TaskSubmissionForm({ children, type, taskSubmission }: P
     return (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            {type === 'taskRating' && <TaskRating taskSubmission={taskSubmission} handleCloseDialog={handleCloseDialog} />}
+            {type === 'quizRating' && <QuizRating quizRating={quizRating} handleCloseDialog={handleCloseDialog} />}
         </Dialog>
     );
 }
 
-function TaskRating({ handleCloseDialog, taskSubmission }: ActionProps) {
+function QuizRating({ handleCloseDialog, quizRating }: ActionProps) {
     const [isLoading, setIsLoading] = useState(false);
     const form = useForm({
         resolver: zodResolver(studyRoomTaskSubmissionSchema),
-        defaultValues: { rate: taskSubmission?.rate || 0, teacher_note: taskSubmission?.teacher_note || '' },
+        defaultValues: { rate: quizRating?.rate, teacher_note: quizRating?.teacher_note || '' },
     });
 
     function onSubmit(values: StudyRoomTaskSubmissionSchemaType) {
@@ -52,20 +52,20 @@ function TaskRating({ handleCloseDialog, taskSubmission }: ActionProps) {
                 const errorMessage = err.server[0] || 'Terjadi kesalahan';
                 form.setError('root', { message: errorMessage });
 
-                toast.error(`Gagal Menilai Pekerjaan siswa ini`, {
+                toast.error(`Gagal Menilai Quiz siswa ini`, {
                     description: errorMessage,
                     action: { label: 'OK', onClick: () => {} },
                 });
             },
             onSuccess: () => {
-                toast.success(`Berhasil Menilai Pekerjaan siswa ini`, {
+                toast.success(`Berhasil Menilai Quiz siswa ini`, {
                     action: { label: 'OK', onClick: () => {} },
                 });
                 form.reset();
                 handleCloseDialog();
             },
         };
-        router.post(`/dashboard/teacher/learning/tasks-submission/${taskSubmission?.id}/rating-task-submission`, values, requestOptions);
+        router.patch(`/dashboard/teacher/learning/quizzes/${quizRating?.id}/${quizRating?.student_id}/rating-quiz`, values, requestOptions);
     }
 
     const isFormBusy = isLoading || form.formState.isLoading || form.formState.isSubmitting;
@@ -73,8 +73,8 @@ function TaskRating({ handleCloseDialog, taskSubmission }: ActionProps) {
     return (
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Beri Nilai</DialogTitle>
-                <DialogDescription>Beri Nilai Tugas</DialogDescription>
+                <DialogTitle>Beri Penilaian</DialogTitle>
+                <DialogDescription>Beri Penilaian pada Quiz</DialogDescription>
             </DialogHeader>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
                 <FieldGroup>
@@ -93,7 +93,6 @@ function TaskRating({ handleCloseDialog, taskSubmission }: ActionProps) {
                                     type="number"
                                 />
                                 <FieldError errors={[fieldState.error]} />
-                                <FieldDescription>Nilai Boleh 0</FieldDescription>
                             </Field>
                         )}
                     />
