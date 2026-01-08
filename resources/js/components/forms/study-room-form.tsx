@@ -7,10 +7,11 @@ import { router, usePage } from '@inertiajs/react';
 import { ReactNode, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { Button } from '../animate-ui/components/buttons/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../animate-ui/components/radix/dialog';
-import { Button } from '../ui/button';
 import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Spinner } from '../ui/spinner';
 
 interface Props {
     children: ReactNode;
@@ -185,7 +186,7 @@ function Create({ handleCloseDialog }: ActionProps) {
                         Batal
                     </Button>
                     <Button disabled={isFormBusy} type="submit">
-                        Tambahkan
+                        {isFormBusy ? <Spinner /> : 'Tambahkan'}
                     </Button>
                 </div>
             </form>
@@ -355,7 +356,7 @@ function Update({ handleCloseDialog, studyRoom }: ActionProps) {
                         Batal
                     </Button>
                     <Button disabled={isFormBusy} type="submit">
-                        Update
+                        {isFormBusy ? <Spinner /> : 'Update'}
                     </Button>
                 </div>
             </form>
@@ -403,7 +404,7 @@ function Delete({ studyRoom, handleCloseDialog }: ActionProps) {
                     Batal
                 </Button>
                 <Button disabled={isButtonBusy} onClick={handleDelete} type="submit">
-                    Hapus
+                    {isButtonBusy ? <Spinner /> : 'Hapus'}
                 </Button>
             </div>
         </DialogContent>

@@ -129,7 +129,7 @@ function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
                         Batal
                     </Button>
                     <Button disabled={isFormBusy} type="submit">
-                        Tambahkan
+                        {isFormBusy ? <Spinner /> : 'Tambahkan'}
                     </Button>
                 </div>
             </form>
@@ -214,7 +214,7 @@ function Update({ handleCloseDialog, task }: ActionProps) {
                         Batal
                     </Button>
                     <Button disabled={isFormBusy} type="submit">
-                        Update
+                        {isFormBusy ? <Spinner /> : 'Update'}
                     </Button>
                 </div>
             </form>
@@ -262,7 +262,7 @@ function Delete({ task, handleCloseDialog }: ActionProps) {
                     Batal
                 </Button>
                 <Button disabled={isButtonBusy} onClick={handleDelete} type="submit">
-                    Hapus
+                    {isButtonBusy ? <Spinner /> : 'Hapus'}
                 </Button>
             </div>
         </DialogContent>

@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Button } from '../ui/button';
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '../ui/field';
 import { Input } from '../ui/input';
+import { Spinner } from '../ui/spinner';
 import { Textarea } from '../ui/textarea';
 
 interface Props {
@@ -122,7 +123,7 @@ function Create({ handleCloseDialog, studyRoomId }: ActionProps) {
                         Batal
                     </Button>
                     <Button disabled={isFormBusy} type="submit">
-                        Tambahkan
+                        {isFormBusy ? <Spinner /> : 'Tambahkan'}
                     </Button>
                 </div>
             </form>
@@ -207,7 +208,7 @@ function Update({ handleCloseDialog, module }: ActionProps) {
                         Batal
                     </Button>
                     <Button disabled={isFormBusy} type="submit">
-                        Update
+                        {isFormBusy ? <Spinner /> : 'Update'}
                     </Button>
                 </div>
             </form>
@@ -255,7 +256,7 @@ function Delete({ module, handleCloseDialog }: ActionProps) {
                     Batal
                 </Button>
                 <Button disabled={isButtonBusy} onClick={handleDelete} type="submit">
-                    Hapus
+                    {isButtonBusy ? <Spinner /> : 'Hapus'}
                 </Button>
             </div>
         </DialogContent>

@@ -2,7 +2,7 @@ import { router } from '@inertiajs/react';
 import { LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Button } from '../ui/button';
+import { Button } from '../animate-ui/components/buttons/button';
 import { Spinner } from '../ui/spinner';
 
 interface Props {
