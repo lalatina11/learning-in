@@ -35,6 +35,7 @@ const StudyRoomQuizTable = () => {
                 <TableRow>
                     <TableHead className="w-[100px]">#</TableHead>
                     <TableHead>Platform</TableHead>
+                    <TableHead>Kode Gabung</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-center">Aksi</TableHead>
                 </TableRow>
@@ -44,6 +45,7 @@ const StudyRoomQuizTable = () => {
                     <TableRow key={quiz.id}>
                         <TableCell className="font-medium">{index + 1}</TableCell>
                         <TableCell>{quiz.platform}</TableCell>
+                        <TableCell>{quiz.join_code}</TableCell>
                         <TableCell>
                             <Badge variant={!quiz.is_open ? 'destructive' : 'default'}>{!quiz.is_open ? 'Ditutup' : 'Dibuka'}</Badge>
                         </TableCell>
