@@ -21,6 +21,7 @@ const QuizTable = ({ quizzes }: Props) => {
             <TableHeader>
                 <TableRow>
                     <TableHead>#</TableHead>
+                    <TableHead>Platform</TableHead>
                     <TableHead>Join</TableHead>
                     <TableHead>Nilai</TableHead>
                     <TableHead>Status Penilaian</TableHead>
@@ -34,6 +35,7 @@ const QuizTable = ({ quizzes }: Props) => {
                         quiz.rating && (
                             <TableRow key={quiz.id}>
                                 <TableCell>{idx + 1}</TableCell>
+                                <TableCell>{quiz.platform}</TableCell>
                                 <TableCell>{quiz.join_code}</TableCell>
                                 <TableCell>{quiz.rating.rate}</TableCell>
                                 <TableCell>
