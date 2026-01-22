@@ -13,7 +13,7 @@ interface Props {
 const DashboardPageContainer = ({ children }: Props) => {
     const { sidebar_state } = usePage().props as PageProps;
 
-    const defaultOpenSidebar = sidebar_state && sidebar_state === 'true' ? true : false;
+    const defaultOpenSidebar = sidebar_state === 'false' ? false : true;
 
     return (
         <ToasterProviderContainer>
