@@ -15,9 +15,11 @@ const TaskSubmissionTable = ({ tasks }: Props) => {
         task_submission: task.task_submissions[0] || null,
     }));
 
+    const taskLength = tasks.flatMap((task) => task.task_submissions).length;
+
     return (
         <Table>
-            <TableCaption>Semua data pekerjaan tugas telah dimuat.</TableCaption>
+            <TableCaption>{taskLength > 0 ? 'Berhasil memuat semua tugas yang sudah dikerjakan.' : 'Belum ada tugas yang dikerjakan'}</TableCaption>
             <TableHeader>
                 <TableRow>
                     <TableHead>#</TableHead>
