@@ -86,12 +86,6 @@ const Details = () => {
                 </div>
                 <div id="task-submissions">
                     <div className="mt-3 flex flex-col gap-3">
-                        <h1 className="text-lg font-semibold">Daftar Quiz</h1>
-                        <TaskSubmissionTable tasks={studyRoom.tasks} />
-                    </div>
-                </div>
-                <div id="task-submissions">
-                    <div className="mt-3 flex flex-col gap-3">
                         <h1 className="text-lg font-semibold">Daftar Penilaian Quiz</h1>
                         <QuizTable quizzes={studyRoom.quizzes} />
                     </div>
