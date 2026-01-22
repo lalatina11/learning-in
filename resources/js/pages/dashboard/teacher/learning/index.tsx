@@ -10,7 +10,6 @@ const Learning = () => {
     const { studyRooms } = usePage().props as PageProps & {
         studyRooms: Array<StudyRoomDetail>;
     };
-    console.log(studyRooms);
 
     return (
         <DashboardPageContainer>
